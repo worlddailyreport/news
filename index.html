@@ -1,35 +1,54 @@
-async function generateLink() {
-    const headline = document.getElementById('headline').value;
-    const fileInput = document.getElementById('imageUpload');
-    const linkInput = document.getElementById('generatedLink');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Daily Report</title>
+</head>
+<body>
+    <h1>Create Your Clickbait Headline</h1>
+    <input type="text" id="headline" placeholder="Enter your headline"><br><br>
+    <input type="file" id="imageUpload" accept="image/*"><br><br>
+    <button onclick="generateLink()">Generate Link</button><br><br>
+    <input type="text" id="generatedLink" readonly style="width: 100%; margin-top: 10px;"><br>
 
-    if (!headline || !fileInput.files.length) {
-        alert('Please enter a headline and upload an image.');
-        return;
-    }
+    <!-- Make sure JavaScript is inside <script> tags -->
+    <script>
+        async function generateLink() {
+            const headline = document.getElementById('headline').value;
+            const fileInput = document.getElementById('imageUpload');
+            const linkInput = document.getElementById('generatedLink');
 
-    const file = fileInput.files[0];
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'wdr_public_uploads');
+            if (!headline || !fileInput.files.length) {
+                alert('Please enter a headline and upload an image.');
+                return;
+            }
 
-    try {
-        const response = await fetch('https://api.cloudinary.com/v1_1/dgeragc2e/image/upload', {
-            method: 'POST',
-            body: formData
-        });
-        const data = await response.json();
-        const previewImageUrl = data.secure_url;
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'wdr_public_uploads');
 
-        const sanitizedHeadline = headline.replace(/\s+/g, '-').toLowerCase();
-        const previewPath = `pagepreview/${sanitizedHeadline}`;
+            try {
+                const response = await fetch('https://api.cloudinary.com/v1_1/dgeragc2e/image/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                const previewImageUrl = data.secure_url;
 
-        // The generated link now goes to `/pagepreview/` first
-        const maskedLink = `https://worlddailyreport.com/${previewPath}?image=${encodeURIComponent(previewImageUrl)}&headline=${encodeURIComponent(headline)}`;
-        linkInput.value = maskedLink;
+                const sanitizedHeadline = headline.replace(/\s+/g, '-').toLowerCase();
+                const previewPath = `pagepreview/${sanitizedHeadline}`;
 
-    } catch (error) {
-        console.error('Error uploading image:', error);
-        alert('Image upload failed.');
-    }
-}
+                // The generated link now goes to `/pagepreview/` first
+                const maskedLink = `https://worlddailyreport.com/${previewPath}?image=${encodeURIComponent(previewImageUrl)}&headline=${encodeURIComponent(headline)}`;
+                linkInput.value = maskedLink;
+
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                alert('Image upload failed.');
+            }
+        }
+    </script>
+</body>
+</html>
