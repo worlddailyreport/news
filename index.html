@@ -24,17 +24,21 @@
             const file = fileInput.files[0];
             const formData = new FormData();
             formData.append('file', file);
-
+            formData.append('upload_preset', 'wdr_public_uploads'); // Updated with your actual upload preset
+            
             try {
-                const response = await fetch('https://world-daily-report.twic.pics/uploads', {
+                const response = await fetch('https://api.cloudinary.com/v1_1/dgeragc2e/image/upload', {
                     method: 'POST',
                     body: formData
                 });
                 const data = await response.json();
-                const imageUrl = data.secure_url;
+                const cloudinaryUrl = data.secure_url;
+
+                // Convert Cloudinary URL into TwicPics-optimized URL
+                const twicPicsUrl = `https://world-daily-report.twic.pics/${cloudinaryUrl.split('/upload/')[1]}`;
 
                 const randomPath = Math.random().toString(36).substr(2, 8);
-                const shareLink = `https://worlddailyreport.com/news/${randomPath}?image=${encodeURIComponent(imageUrl)}&headline=${encodeURIComponent(headline)}`;
+                const shareLink = `https://worlddailyreport.com/news/${randomPath}?image=${encodeURIComponent(twicPicsUrl)}&headline=${encodeURIComponent(headline)}`;
                 
                 document.getElementById('result').innerHTML = `<a href="${shareLink}" target="_blank">Share this link</a>`;
             } catch (error) {
