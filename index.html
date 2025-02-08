@@ -20,11 +20,11 @@ async function generateLink() {
         });
         const data = await response.json();
         const previewImageUrl = data.secure_url;
-        
+
         const sanitizedHeadline = headline.replace(/\s+/g, '-').toLowerCase();
         const previewPath = `news/${sanitizedHeadline}`;
 
-        // Send metadata to Netlify function to generate a static page
+        // Send metadata to Netlify function to generate a static preview page
         await fetch('/.netlify/functions/createPreviewPage', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
