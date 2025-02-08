@@ -36,8 +36,9 @@
                 
                 // The preview image will be the one uploaded by the user
                 const previewImageUrl = data.secure_url;
-
-                const randomPath = Math.random().toString(36).substr(2, 8);
+                
+                // Generate a short masked URL for redirection
+                const randomPath = Math.random().toString(36).substr(2, 5); // Shorter random URL
                 const shareLink = `https://worlddailyreport.com/news/${randomPath}?image=${encodeURIComponent(previewImageUrl)}&headline=${encodeURIComponent(headline)}`;
                 
                 linkInput.value = shareLink;
