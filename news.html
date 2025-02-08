@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta property="og:title" content="SHOCKING NEWS!">
+    <meta property="og:description" content="You won’t believe what happened!">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
+    <title>Breaking News</title>
+    <script>
+        // Get image URL from query params and update OG meta
+        const urlParams = new URLSearchParams(window.location.search);
+        const image = urlParams.get("image");
+
+        if (image) {
+            document.querySelector('meta[property="og:image"]').setAttribute("content", image);
+            document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
+        }
+
+        // Redirect after 3 seconds
+        setTimeout(() => {
+            window.location.href = "https://your-site.com/barry-woods.jpg";
+        }, 3000);
+    </script>
+</head>
+<body>
+    <h1>Breaking News!</h1>
+    <img id="preview" src="" alt="News Image">
+</body>
+</html>
