@@ -10,8 +10,8 @@
     <meta property="og:type" content="website">
     <script>
         function updateMetaTags(imageUrl, headline) {
-            document.getElementById('ogTitle').setAttribute('content', headline);
-            document.getElementById('ogImage').setAttribute('content', imageUrl);
+            document.querySelector('meta[property="og:title"]').setAttribute('content', headline);
+            document.querySelector('meta[property="og:image"]').setAttribute('content', imageUrl);
         }
         
         async function generateLink() {
