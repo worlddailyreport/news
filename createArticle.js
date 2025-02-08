@@ -3,7 +3,7 @@ exports.handler = async (event) => {
         const queryParams = new URL(event.rawUrl).searchParams;
         
         const headline = queryParams.get('headline') || "Breaking News";
-        const image = queryParams.get('image') || "https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg";
+        const image = queryParams.get('image') || "https://i.imghippo.com/files/ec2052kqs.jpg"; // User-uploaded image preview
 
         const articlePage = `
         <!DOCTYPE html>
@@ -12,10 +12,10 @@ exports.handler = async (event) => {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>${headline}</title>
+            <meta property="og:type" content="article">
             <meta property="og:title" content="${headline}">
             <meta property="og:image" content="${image}">
             <meta property="og:description" content="Click to read more!">
-            <meta property="og:type" content="website">
             <meta property="og:url" content="${event.rawUrl}">
 
             <script>
@@ -25,7 +25,12 @@ exports.handler = async (event) => {
             </script>
         </head>
         <body>
-            <h1>Redirecting...</h1>
+            <div class="body-container">
+                <h1>${headline}</h1>
+                <div class="content-container">
+                    <img class="troll_img" src="https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg" />
+                </div>
+            </div>
         </body>
         </html>`;
 
