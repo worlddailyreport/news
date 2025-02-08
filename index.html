@@ -4,24 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>World Daily Report</title>
-    <meta property="og:title" id="metaHeadline" content="">
-    <meta property="og:image" id="metaImage" content="">
-    <meta property="og:description" content="Click to read more!">
-    <meta property="og:type" content="website">
-    <script>
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const image = urlParams.get('image');
-            const headline = urlParams.get('headline');
-            if (image && headline) {
-                document.getElementById('metaImage').setAttribute('content', image);
-                document.getElementById('metaHeadline').setAttribute('content', headline);
-                setTimeout(() => {
-                    window.location.href = 'https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg'; // Redirects to Barry Woods' Image
-                }, 3000);
-            }
-        };
-    </script>
 </head>
 <body>
     <h1>Create Your Clickbait Headline</h1>
@@ -53,14 +35,35 @@
                 });
                 const data = await response.json();
                 
-                // The preview image will be the one uploaded by the user
-                const previewImageUrl = data.secure_url;
-                
                 // Generate a short masked URL based on the headline
                 const randomPath = headline.replace(/\s+/g, '-').toLowerCase() + '-' + Math.random().toString(36).substr(2, 5);
-                const shareLink = `https://worlddailyreport.com/${randomPath}?image=${encodeURIComponent(previewImageUrl)}&headline=${encodeURIComponent(headline)}`;
+                const maskedLink = `https://worlddailyreport.com/news/${randomPath}`;
                 
-                linkInput.value = shareLink;
+                // The generated link always redirects to Barry Woods' image
+                const redirectScript = `<!DOCTYPE html>
+                <html lang='en'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <meta property='og:title' content='${headline}'>
+                    <meta property='og:image' content='${data.secure_url}'>
+                    <meta property='og:description' content='Click to read more!'>
+                    <meta property='og:type' content='website'>
+                    <script>setTimeout(() => { window.location.href = 'https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg'; }, 3000);</script>
+                </head>
+                <body>
+                    <h1>Redirecting...</h1>
+                </body>
+                </html>`;
+                
+                // Save the redirect file dynamically (requires backend support like Netlify functions)
+                fetch('/.netlify/functions/saveRedirect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path: randomPath, content: redirectScript })
+                });
+                
+                linkInput.value = maskedLink;
             } catch (error) {
                 console.error('Error uploading image:', error);
                 alert('Image upload failed.');
