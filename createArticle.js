@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-
 exports.handler = async (event) => {
     try {
-        const { path: articlePath, image, headline } = JSON.parse(event.body);
+        const queryParams = new URL(event.rawUrl).searchParams;
+        
+        const headline = queryParams.get('headline') || "Breaking News";
+        const image = queryParams.get('image') || "https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg";
 
         const articlePage = `
         <!DOCTYPE html>
@@ -16,7 +16,7 @@ exports.handler = async (event) => {
             <meta property="og:image" content="${image}">
             <meta property="og:description" content="Click to read more!">
             <meta property="og:type" content="website">
-            <meta property="og:url" content="https://worlddailyreport.com/${articlePath}">
+            <meta property="og:url" content="${event.rawUrl}">
 
             <script>
                 setTimeout(() => {
@@ -37,7 +37,7 @@ exports.handler = async (event) => {
     } catch (error) {
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to create article page' })
+            body: JSON.stringify({ error: 'Failed to generate article page' })
         };
     }
 };
