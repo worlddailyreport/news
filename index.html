@@ -4,15 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>World Daily Report</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Create Your Clickbait Headline</h1>
-    <input type="text" id="headline" placeholder="Enter your headline"><br><br>
-    <input type="file" id="imageUpload" accept="image/*"><br><br>
-    <button onclick="generateLink()">Generate Link</button><br><br>
-    <input type="text" id="generatedLink" readonly style="width: 100%; margin-top: 10px;"><br>
+    <div class="container mt-5">
+        <h1 class="text-center">Create Your Fake News Headline</h1>
+        <form id="newsForm">
+            <label for="headline">Preview Title</label>
+            <input type="text" id="headline" class="form-control" required>
 
-    <!-- Make sure JavaScript is inside <script> tags -->
+            <label for="imageUpload">Upload Preview Image</label>
+            <input type="file" id="imageUpload" class="form-control" accept="image/*" required>
+
+            <br />
+            <button type="button" class="btn btn-primary btn-block" onclick="generateLink()">Create</button>
+        </form>
+
+        <div class="mt-4">
+            <label for="generatedLink">Your Fake News Link</label>
+            <input type="text" id="generatedLink" class="form-control" readonly>
+        </div>
+    </div>
+
     <script>
         async function generateLink() {
             const headline = document.getElementById('headline').value;
@@ -34,21 +47,4 @@
                     method: 'POST',
                     body: formData
                 });
-                const data = await response.json();
-                const previewImageUrl = data.secure_url;
-
-                const sanitizedHeadline = headline.replace(/\s+/g, '-').toLowerCase();
-                const previewPath = `pagepreview/${sanitizedHeadline}`;
-
-                // The generated link now goes to `/pagepreview/` first
-                const maskedLink = `https://worlddailyreport.com/${previewPath}?image=${encodeURIComponent(previewImageUrl)}&headline=${encodeURIComponent(headline)}`;
-                linkInput.value = maskedLink;
-
-            } catch (error) {
-                console.error('Error uploading image:', error);
-                alert('Image upload failed.');
-            }
-        }
-    </script>
-</body>
-</html>
+                const data = await re
