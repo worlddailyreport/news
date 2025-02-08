@@ -23,6 +23,7 @@
         <div class="mt-4">
             <label for="generatedLink">Your Fake News Link</label>
             <input type="text" id="generatedLink" class="form-control" readonly>
+            <button class="btn btn-secondary btn-block mt-2" onclick="copyLink()">Copy Link</button>
         </div>
     </div>
 
@@ -51,16 +52,24 @@
                 const previewImageUrl = data.secure_url;
 
                 const sanitizedHeadline = headline.replace(/\s+/g, '-').toLowerCase();
-                const articlePath = `article/${sanitizedHeadline}`;
+                const shortId = Math.random().toString(36).substr(2, 5);
+                const articlePath = `article/${sanitizedHeadline}-${shortId}`;
 
                 // Correctly format the final link
-                const maskedLink = `https://worlddailyreport.com/${articlePath}?image=${encodeURIComponent(previewImageUrl)}&headline=${encodeURIComponent(headline)}`;
+                const maskedLink = `https://worlddailyreport.com/${articlePath}`;
                 linkInput.value = maskedLink;
 
             } catch (error) {
                 console.error('Error uploading image:', error);
                 alert('Image upload failed.');
             }
+        }
+
+        function copyLink() {
+            const linkInput = document.getElementById('generatedLink');
+            linkInput.select();
+            document.execCommand('copy');
+            alert('Link copied to clipboard!');
         }
     </script>
 </body>
