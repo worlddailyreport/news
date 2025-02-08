@@ -11,7 +11,7 @@
     <input type="file" id="imageUpload" accept="image/*"><br><br>
     <button onclick="generateLink()">Generate Link</button><br><br>
     <input type="text" id="generatedLink" readonly style="width: 100%; margin-top: 10px;"><br>
-    
+
     <script>
         async function generateLink() {
             const fileInput = document.getElementById('imageUpload');
@@ -35,35 +35,25 @@
                 });
                 const data = await response.json();
                 
+                // The preview image will be the one uploaded by the user
+                const previewImageUrl = data.secure_url;
+                
                 // Generate a short masked URL based on the headline
                 const randomPath = headline.replace(/\s+/g, '-').toLowerCase() + '-' + Math.random().toString(36).substr(2, 5);
-                const maskedLink = `https://worlddailyreport.com/news/${randomPath}`;
-                
-                // The generated link always redirects to Barry Woods' image
-                const redirectScript = `<!DOCTYPE html>
-                <html lang='en'>
-                <head>
-                    <meta charset='UTF-8'>
-                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                    <meta property='og:title' content='${headline}'>
-                    <meta property='og:image' content='${data.secure_url}'>
-                    <meta property='og:description' content='Click to read more!'>
-                    <meta property='og:type' content='website'>
-                    <script>setTimeout(() => { window.location.href = 'https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg'; }, 3000);</script>
-                </head>
-                <body>
-                    <h1>Redirecting...</h1>
-                </body>
-                </html>`;
-                
-                // Save the redirect file dynamically (requires backend support like Netlify functions)
-                fetch('/.netlify/functions/saveRedirect', {
+                const shareLink = `https://worlddailyreport.com/news/${randomPath}`;
+
+                // Store the redirect data
+                await fetch('/.netlify/functions/createRedirect', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ path: randomPath, content: redirectScript })
+                    body: JSON.stringify({
+                        path: randomPath,
+                        image: previewImageUrl,
+                        headline: headline
+                    })
                 });
-                
-                linkInput.value = maskedLink;
+
+                linkInput.value = shareLink;
             } catch (error) {
                 console.error('Error uploading image:', error);
                 alert('Image upload failed.');
