@@ -4,33 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>World Daily Report</title>
-    <meta property="og:title" id="metaHeadline" content="">
-    <meta property="og:image" id="metaImage" content="">
+    <meta property="og:title" content="Fake News Headline" id="ogTitle">
+    <meta property="og:image" content="" id="ogImage">
     <meta property="og:description" content="Click to read more!">
     <meta property="og:type" content="website">
     <script>
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const image = urlParams.get('image');
-            const headline = urlParams.get('headline');
-            if (image && headline) {
-                document.getElementById('metaImage').setAttribute('content', image);
-                document.getElementById('metaHeadline').setAttribute('content', headline);
-            }
-            setTimeout(() => {
-                window.location.href = 'https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg';
-            }, 3000);
-        };
-    </script>
-</head>
-<body>
-    <h1>Create Your Clickbait Headline</h1>
-    <input type="text" id="headline" placeholder="Enter your headline"><br><br>
-    <input type="file" id="imageUpload" accept="image/*"><br><br>
-    <button onclick="generateLink()">Generate Link</button><br><br>
-    <input type="text" id="generatedLink" readonly style="width: 100%; margin-top: 10px;"><br>
-    
-    <script>
+        function updateMetaTags(imageUrl, headline) {
+            document.getElementById('ogTitle').setAttribute('content', headline);
+            document.getElementById('ogImage').setAttribute('content', imageUrl);
+        }
+        
         async function generateLink() {
             const headline = document.getElementById('headline').value;
             const fileInput = document.getElementById('imageUpload');
@@ -58,11 +41,19 @@
                 const maskedLink = `https://worlddailyreport.com/news/${randomPath}?image=${encodeURIComponent(previewImageUrl)}&headline=${encodeURIComponent(headline)}`;
                 
                 linkInput.value = maskedLink;
+                updateMetaTags(previewImageUrl, headline);
             } catch (error) {
                 console.error('Error uploading image:', error);
                 alert('Image upload failed.');
             }
         }
     </script>
+</head>
+<body>
+    <h1>Create Your Clickbait Headline</h1>
+    <input type="text" id="headline" placeholder="Enter your headline"><br><br>
+    <input type="file" id="imageUpload" accept="image/*"><br><br>
+    <button onclick="generateLink()">Generate Link</button><br><br>
+    <input type="text" id="generatedLink" readonly style="width: 100%; margin-top: 10px;"><br>
 </body>
 </html>
