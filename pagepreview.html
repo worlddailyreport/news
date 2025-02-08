@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breaking News</title>
+
+    <!-- Metadata for iMessage preview -->
+    <meta property="og:title" content="" id="metaHeadline">
+    <meta property="og:image" content="" id="metaImage">
+    <meta property="og:description" content="Click to read more!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+
+    <script>
+        function updateMetaTags() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const image = urlParams.get('image');
+            const headline = urlParams.get('headline');
+            const currentUrl = window.location.href;
+
+            if (image && headline) {
+                document.querySelector('meta[property=\"og:image\"]').setAttribute('content', image);
+                document.querySelector('meta[property=\"og:title\"]').setAttribute('content', headline);
+                document.querySelector('meta[property=\"og:url\"]').setAttribute('content', currentUrl);
+            }
+
+            // After iMessage previews the page, redirect to `/news/`
+            setTimeout(() => {
+                const newsRedirect = currentUrl.replace('pagepreview', 'news');
+                window.location.href = newsRedirect;
+            }, 2000);
+        }
+        updateMetaTags();
+    </script>
+</head>
+<body>
+    <h1>Redirecting...</h1>
+</body>
+</html>
