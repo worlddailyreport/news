@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Daily Report</title>
+</head>
+<body>
+    <h1>Create Your Clickbait Headline</h1>
+    <input type="text" id="headline" placeholder="Enter your headline"><br>
+    <input type="file" id="imageUpload" accept="image/*"><br>
+    <button onclick="generateLink()">Generate Link</button>
+    <p id="result"></p>
+    
+    <script>
+        async function generateLink() {
+            const fileInput = document.getElementById('imageUpload');
+            const headline = document.getElementById('headline').value;
+            if (!fileInput.files.length || !headline) {
+                alert('Please upload an image and enter a headline.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('https://world-daily-report.twic.pics/uploads', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                const imageUrl = data.secure_url;
+
+                const randomPath = Math.random().toString(36).substr(2, 8);
+                const shareLink = `https://worlddailyreport.com/news/${randomPath}?image=${encodeURIComponent(imageUrl)}&headline=${encodeURIComponent(headline)}`;
+                
+                document.getElementById('result').innerHTML = `<a href="${shareLink}" target="_blank">Share this link</a>`;
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                alert('Image upload failed.');
+            }
+        }
+    </script>
+</body>
+</html>
