@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>World Daily Report</title>
-    <meta property="og:title" content="Fake News Headline" id="ogTitle">
+    <meta property="og:title" content="" id="ogTitle">
     <meta property="og:image" content="" id="ogImage">
     <meta property="og:description" content="Click to read more!">
     <meta property="og:type" content="website">
@@ -38,7 +38,7 @@
                 const previewImageUrl = data.secure_url;
                 
                 const sanitizedHeadline = headline.replace(/\s+/g, '-').toLowerCase();
-                const maskedLink = `https://worlddailyreport.com/${sanitizedHeadline}`;
+                const maskedLink = `https://worlddailyreport.com/news/${sanitizedHeadline}`;
                 
                 linkInput.value = maskedLink;
                 updateMetaTags(previewImageUrl, headline);
