@@ -47,4 +47,31 @@
                     method: 'POST',
                     body: formData
                 });
-                const data = await re
+                const data = await response.json();
+                const previewImageUrl = data.secure_url;
+
+                const sanitizedHeadline = headline.replace(/\s+/g, '-').toLowerCase();
+                const articlePath = `article/${sanitizedHeadline}`;
+
+                // Save article metadata
+                await fetch('/.netlify/functions/createArticle', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        path: articlePath,
+                        image: previewImageUrl,
+                        headline: headline
+                    })
+                });
+
+                const maskedLink = `https://worlddailyreport.com/${articlePath}`;
+                linkInput.value = maskedLink;
+
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                alert('Image upload failed.');
+            }
+        }
+    </script>
+</body>
+</html>
