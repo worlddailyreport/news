@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Viral News Story</title>
+</head>
+<body>
+    <h1>Create Your Fake Headline</h1>
+    <form id="uploadForm">
+        <input type="text" id="headline" placeholder="Enter headline" required>
+        <input type="file" id="image" accept="image/*" required>
+        <button type="submit">Generate Link</button>
+    </form>
+    <p id="result"></p>
+    
+    <script>
+        document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append("image", document.getElementById("image").files[0]);
+            
+            const res = await fetch("/.netlify/functions/upload", { method: "POST", body: formData });
+            const data = await res.json();
+            
+            document.getElementById("result").innerHTML = 
+                `<p>Your prank link: <a href="${data.shortLink}" target="_blank">${data.shortLink}</a></p>`;
+        });
+    </script>
+</body>
+</html>
