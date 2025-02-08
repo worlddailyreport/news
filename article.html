@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breaking News</title>
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="" id="metaHeadline">
+    <meta property="og:image" content="" id="metaImage">
+    <meta property="og:description" content="Click to read more!">
+    <meta property="og:url" content="">
+
+    <script>
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const image = urlParams.get('image');
+            const headline = urlParams.get('headline');
+            const currentUrl = window.location.href;
+
+            if (image && headline) {
+                document.querySelector('meta[property="og:image"]').setAttribute('content', image);
+                document.querySelector('meta[property="og:title"]').setAttribute('content', headline);
+                document.querySelector('meta[property="og:url"]').setAttribute('content', currentUrl);
+            }
+
+            // Redirect after preview loads
+            setTimeout(() => {
+                window.location.href = 'https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg';
+            }, 2000);
+        };
+    </script>
+</head>
+<body>
+    <h1>Redirecting...</h1>
+</body>
+</html>
