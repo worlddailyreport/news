@@ -39,17 +39,7 @@
                 const sanitizedHeadline = headline.replace(/\s+/g, '-').toLowerCase();
                 const previewPath = `news/${sanitizedHeadline}`;
 
-                // Store the preview page
-                await fetch('/.netlify/functions/createPreviewPage', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        path: previewPath,
-                        image: previewImageUrl,
-                        headline: headline
-                    })
-                });
-
+                // The generated link
                 const maskedLink = `https://worlddailyreport.com/${previewPath}`;
                 linkInput.value = maskedLink;
 
