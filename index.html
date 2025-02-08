@@ -10,12 +10,13 @@
     <input type="text" id="headline" placeholder="Enter your headline"><br>
     <input type="file" id="imageUpload" accept="image/*"><br>
     <button onclick="generateLink()">Generate Link</button>
-    <p id="result"></p>
+    <input type="text" id="generatedLink" readonly style="width: 100%; margin-top: 10px;">
     
     <script>
         async function generateLink() {
             const fileInput = document.getElementById('imageUpload');
             const headline = document.getElementById('headline').value;
+            const linkInput = document.getElementById('generatedLink');
             if (!fileInput.files.length || !headline) {
                 alert('Please upload an image and enter a headline.');
                 return;
@@ -33,13 +34,13 @@
                 });
                 const data = await response.json();
                 
-                // The preview image will always be Barry Woods' image
-                const previewImageUrl = 'https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg';
+                // The preview image will be the one uploaded by the user
+                const previewImageUrl = data.secure_url;
 
                 const randomPath = Math.random().toString(36).substr(2, 8);
                 const shareLink = `https://worlddailyreport.com/news/${randomPath}?image=${encodeURIComponent(previewImageUrl)}&headline=${encodeURIComponent(headline)}`;
                 
-                document.getElementById('result').innerHTML = `<a href="${shareLink}" target="_blank">Share this link</a>`;
+                linkInput.value = shareLink;
             } catch (error) {
                 console.error('Error uploading image:', error);
                 alert('Image upload failed.');
