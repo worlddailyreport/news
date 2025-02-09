@@ -1,8 +1,12 @@
+const { getArticles } = require("./storage");
+
 module.exports.handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
 
-        // ✅ Check if the article exists in memory
+        // ✅ Retrieve articles from shared storage
+        let articles = getArticles();
+
         if (!articles[slug]) {
             console.error(`❌ No article found for slug: ${slug}`);
             return { statusCode: 404, body: "Error: Article not found." };
