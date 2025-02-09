@@ -1,6 +1,4 @@
-const dotenv = require("dotenv");
-
-dotenv.config(); // ✅ Load environment variables
+let articles = {}; // ✅ Store articles in memory
 
 module.exports.handler = async (event) => {
     if (event.httpMethod !== "POST") {
@@ -19,12 +17,8 @@ module.exports.handler = async (event) => {
         const slug = headline.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
         const shortUrl = `https://worlddailyreport.com/article/${slug}`;
 
-        // ✅ Load existing articles from Netlify Environment Variable
-        let articles = JSON.parse(process.env.ARTICLES_DB || "{}");
+        // ✅ Store article in memory
         articles[slug] = { headline, imageUrl };
-
-        // ✅ Save back to Environment Variables
-        process.env.ARTICLES_DB = JSON.stringify(articles);
 
         console.log(`✅ Article saved: ${headline} (${shortUrl})`);
 
