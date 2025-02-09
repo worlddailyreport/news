@@ -13,7 +13,7 @@ exports.handler = async (event) => {
             fs.mkdirSync(saveDir, { recursive: true });
         }
 
-        // Generate the correct Open Graph metadata
+        // Generate the correct Open Graph metadata for preview
         const previewPageContent = `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -40,7 +40,7 @@ exports.handler = async (event) => {
         </body>
         </html>`;
 
-        // Save the file
+        // Save the file as an actual HTML page
         fs.writeFileSync(savePath, previewPageContent, "utf8");
 
         return {
