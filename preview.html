@@ -1,37 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="headlineTitle">Loading...</title>
-    
-    <!-- Open Graph Meta Tags for iMessage Preview -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Breaking News" id="ogTitle">
-    <meta property="og:image" content="https://via.placeholder.com/600x315" id="ogImage">
-    <meta property="og:description" content="Click to read more!">
-    <meta property="og:url" content="">
+const express = require('express');
+const app = express();
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const headline = urlParams.get('headline');
-            const image = urlParams.get('image');
+app.get('/preview', (req, res) => {
+    const headline = req.query.headline;
+    const image = req.query.image;
 
-            if (headline) {
-                document.title = headline;
-                document.querySelector("meta[property='og:title']").setAttribute("content", headline);
-            }
+    const html = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>${headline}</title>
+            
+            <!-- Open Graph Meta Tags for iMessage Preview -->
+            <meta property="og:type" content="article">
+            <meta property="og:title" content="${headline}">
+            <meta property="og:image" content="${image}">
+            <meta property="og:description" content="Click to read more!">
+            <meta property="og:url" content="${req.url}">
 
-            if (image) {
-                document.querySelector("meta[property='og:image']").setAttribute("content", image);
-            }
+            <script>
+                window.setTimeout(function() {
+                    window.location.href = 'https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg'; // Replace with the actual URL
+                }, 1000); // Wait for 1 second to allow the meta tags to update
+            </script>
+        </head>
+        <body>
+            <h1>${headline}</h1>
+        </body>
+        </html>
+    `;
 
-            document.querySelector("meta[property='og:url']").setAttribute("content", window.location.href);
-        });
-    </script>
-</head>
-<body>
-    <h1>Loading preview...</h1>
-</body>
-</html>
+    res.send(html);
+});
+
+app.listen(3000, () => {
+    console.log('Server started on port 3000');
+});
