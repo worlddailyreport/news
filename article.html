@@ -3,38 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
+    <title>Loading image...</title>
 
     <script>
-        async function redirectToImage() {
-            // ✅ Extract slug from URL
+        async function showImage() {
             const slug = window.location.pathname.split("/").pop();
-
-            // ✅ Fetch stored article
             try {
                 const response = await fetch(`/api/get-article?slug=${slug}`);
                 if (!response.ok) throw new Error("Article not found");
 
                 const article = await response.json();
-
                 if (!article.imageUrl) {
                     document.body.innerHTML = "<h1>Error: Article Not Found</h1>";
                     return;
                 }
 
-                // ✅ Instantly redirect to the image
-                window.location.href = article.imageUrl;
+                // ✅ Show the image instead of redirecting
+                document.body.innerHTML = `<img src="${article.imageUrl}" alt="Troll Image" style="width:100%; max-width:600px; display:block; margin:auto;">`;
             } catch (error) {
                 console.error("❌ Failed to load article:", error);
                 document.body.innerHTML = "<h1>Error: Article Not Found</h1>";
             }
         }
 
-        redirectToImage();
+        showImage();
     </script>
-
 </head>
 <body>
-    <h1>Redirecting...</h1>
+    <h1>Loading...</h1>
 </body>
 </html>
