@@ -1,6 +1,6 @@
 let articles = {}; // ✅ Ensure this is declared globally
 
-export const handler = async (event) => {
+module.exports.handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
 
@@ -50,4 +50,13 @@ export const handler = async (event) => {
                 <body>
                     <h1>${headline}</h1>
                     <img src="${imageUrl}">
-                    <p>Loadin
+                    <p>Loading article...</p>
+                </body>
+                </html>
+            `,
+        };
+    } catch (err) {
+        console.error("❌ Error retrieving article:", err);
+        return { statusCode: 500, body: "Server error." };
+    }
+};
