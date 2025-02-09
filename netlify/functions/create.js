@@ -1,4 +1,4 @@
-let articles = {}; // In-memory storage for articles
+let articles = {}; // ✅ Stores articles in memory
 
 export const handler = async (event) => {
     if (event.httpMethod !== "POST") {
@@ -12,11 +12,11 @@ export const handler = async (event) => {
             return { statusCode: 400, body: JSON.stringify({ error: "Invalid input" }) };
         }
 
-        // Generate a URL-friendly slug
+        // ✅ Generate a URL-friendly slug
         const slug = headline.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
         const shortUrl = `https://worlddailyreport.com/article/${slug}`;
 
-        // ✅ Store the article in memory
+        // ✅ Store article in memory
         articles[slug] = { headline, imageUrl };
 
         console.log(`✅ Article saved: ${headline} (${shortUrl})`);
