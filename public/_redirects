@@ -1,1 +1,1 @@
-/article/* /article/:splat 200
+/preview /preview.html 200
