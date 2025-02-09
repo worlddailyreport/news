@@ -1,4 +1,4 @@
-let articles = {}; // ✅ Store articles in memory
+const { saveArticle } = require("./storage");
 
 module.exports.handler = async (event) => {
     if (event.httpMethod !== "POST") {
@@ -17,8 +17,8 @@ module.exports.handler = async (event) => {
         const slug = headline.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
         const shortUrl = `https://worlddailyreport.com/article/${slug}`;
 
-        // ✅ Store article in memory (temporary fix)
-        articles[slug] = { headline, imageUrl };
+        // ✅ Store article in shared storage
+        saveArticle(slug, { headline, imageUrl });
 
         console.log(`✅ Article saved: ${headline} (${shortUrl})`);
 
