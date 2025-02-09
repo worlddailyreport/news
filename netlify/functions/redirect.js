@@ -1,11 +1,13 @@
+let articles = {}; // ✅ Stores generated articles in memory
+
 export const handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
 
-        // ✅ Retrieve article from in-memory storage
+        // ✅ Check if the article exists
         if (!articles[slug]) {
             console.error(`❌ No article found for slug: ${slug}`);
-            return { statusCode: 404, body: "Article not found" };
+            return { statusCode: 404, body: "Error: Article not found." };
         }
 
         const { headline, imageUrl } = articles[slug];
@@ -55,6 +57,6 @@ export const handler = async (event) => {
         };
     } catch (err) {
         console.error("❌ Error retrieving article:", err);
-        return { statusCode: 500, body: "Server error" };
+        return { statusCode: 500, body: "Server error." };
     }
 };
