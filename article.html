@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading article...</title>
 
-    <!-- ✅ Meta tags will be filled dynamically -->
+    <!-- ✅ Meta tags will be dynamically updated -->
     <meta property="og:title" content="">
     <meta property="og:image" content="">
     <meta property="og:description" content="Click to read more!">
@@ -17,7 +17,7 @@
     <meta name="twitter:description" content="Click to read more!">
     <meta name="twitter:image" content="">
 
-    <!-- ✅ Redirects to Barry Woods after 3 seconds -->
+    <!-- ✅ Redirect after 3 seconds to Barry Woods -->
     <meta id="redirect-meta" http-equiv="refresh" content="3;url=https://i.imghippo.com/files/JfSn7929Qs.jpg">
 
     <script>
@@ -25,32 +25,27 @@
             // ✅ Extract slug from URL
             const slug = window.location.pathname.split("/").pop();
 
-            // ✅ Fetch stored articles
-            const response = await fetch("/data.json");
-            const articles = await response.json();
+            // ✅ Fetch stored article
+            const response = await fetch(`/api/get-article?slug=${slug}`);
+            const article = await response.json();
 
-            if (!articles[slug]) {
+            if (!article.headline) {
                 document.body.innerHTML = "<h1>Error: Article Not Found</h1>";
                 return;
             }
 
-            const { headline, imageUrl } = articles[slug];
-
-            // ✅ Update page title
-            document.title = headline;
-
-            // ✅ Update Open Graph Meta Tags for iMessage Preview
-            document.querySelector('meta[property="og:title"]').setAttribute("content", headline);
-            document.querySelector('meta[property="og:image"]').setAttribute("content", imageUrl);
+            // ✅ Update page title and meta tags
+            document.title = article.headline;
+            document.querySelector('meta[property="og:title"]').setAttribute("content", article.headline);
+            document.querySelector('meta[property="og:image"]').setAttribute("content", article.imageUrl);
             document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
-
-            document.querySelector('meta[name="twitter:title"]').setAttribute("content", headline);
-            document.querySelector('meta[name="twitter:image"]').setAttribute("content", imageUrl);
+            document.querySelector('meta[name="twitter:title"]').setAttribute("content", article.headline);
+            document.querySelector('meta[name="twitter:image"]').setAttribute("content", article.imageUrl);
 
             // ✅ Display article
             document.body.innerHTML = `
-                <h1>${headline}</h1>
-                <img src="${imageUrl}" alt="Article Image">
+                <h1>${article.headline}</h1>
+                <img src="${article.imageUrl}" alt="Article Image">
                 <p>Loading article...</p>
             `;
         }
