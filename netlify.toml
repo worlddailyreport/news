@@ -1,6 +1,6 @@
 [build]
   functions = "netlify/functions"
-  publish = "public"
+  publish = "/"  # Change this if `index.html` is NOT inside `public/`
 
 [functions]
   directory = "netlify/functions"
