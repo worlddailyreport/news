@@ -1,22 +1,34 @@
-import { get } from "@netlify/functions/storage";
+const fs = require("fs");
+const path = require("path");
 
-export const handler = async (event) => {
+// ✅ Use Netlify's writable `/tmp/` directory
+const dataFilePath = path.join("/tmp", "data.json");
+
+// ✅ Load stored articles from `/tmp/data.json`
+function loadArticles() {
+    if (fs.existsSync(dataFilePath)) {
+        return JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
+    }
+    return {};
+}
+
+module.exports.handler = async (event) => {
     try {
         const slug = event.queryStringParameters.slug;
         if (!slug) {
             return { statusCode: 400, body: JSON.stringify({ error: "Missing slug" }) };
         }
 
-        // ✅ Retrieve article from Netlify KV Storage
-        const articleData = await get(`article_${slug}`);
+        // ✅ Retrieve articles from `/tmp/data.json`
+        let articles = loadArticles();
 
-        if (!articleData) {
+        if (!articles[slug]) {
             return { statusCode: 404, body: JSON.stringify({ error: "Article not found" }) };
         }
 
         return {
             statusCode: 200,
-            body: articleData,
+            body: JSON.stringify(articles[slug]),
         };
     } catch (err) {
         console.error("❌ Error retrieving article:", err);
