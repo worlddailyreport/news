@@ -1,6 +1,6 @@
 exports.handler = async (event) => {
     const slug = event.path.split("/").pop();
-    const headline = slug.replace(/-/g, ' '); // Convert slug back to title format
+    const headline = slug.replace(/-/g, ' '); // Convert slug back to readable format
 
     return {
         statusCode: 200,
