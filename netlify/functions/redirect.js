@@ -1,11 +1,22 @@
-const { getArticles } = require("./storage");
+const fs = require("fs");
+const path = require("path");
+
+const dataFilePath = path.join("/tmp", "data.json"); // ✅ Netlify allows writing to /tmp
+
+// ✅ Load stored articles from `data.json`
+function loadArticles() {
+    if (fs.existsSync(dataFilePath)) {
+        return JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
+    }
+    return {};
+}
 
 module.exports.handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
 
-        // ✅ Retrieve articles from shared storage
-        let articles = getArticles();
+        // ✅ Retrieve articles from `data.json`
+        let articles = loadArticles();
 
         if (!articles[slug]) {
             console.error(`❌ No article found for slug: ${slug}`);
