@@ -27,15 +27,9 @@
             background-color: #007bff;
             border-color: #007bff;
         }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
         .btn-secondary {
             background-color: #6c757d;
             border-color: #6c757d;
-        }
-        .btn-secondary:hover {
-            background-color: #5a6268;
         }
         .form-control {
             margin-bottom: 10px;
@@ -47,10 +41,10 @@
         <h1 class="text-center">Create Your Fake News Headline</h1>
         <div class="form-container">
             <form class="form-group" id="newsForm">
-                <label for="fake_title">Preview Title</label>
+                <label for="fake_title">Headline</label>
                 <input type="text" name="fake_title" id="fake_title" class="form-control" required>
 
-                <label for="fake_image_url">Preview Image URL</label>
+                <label for="fake_image_url">Image URL</label>
                 <input type="url" name="fake_image_url" id="fake_image_url" class="form-control" required>
 
                 <br />
@@ -72,18 +66,19 @@
             const linkInput = document.getElementById('generatedLink');
 
             if (!title || !imageUrl) {
-                alert('Please enter a title and an image URL.');
+                alert('Please enter a headline and an image URL.');
                 return;
             }
 
             const sanitizedTitle = title.replace(/\s+/g, '-').toLowerCase();
             const shortId = Math.random().toString(36).substr(2, 5);
-            const articlePath = `article/${sanitizedTitle}-${shortId}`;
+            const articlePath = `article/${sanitizedTitle}-${shortId}.html`;
             const generatedLink = `https://worlddailyreport.com/${articlePath}`;
+
             linkInput.value = generatedLink;
 
-            // Save metadata for Open Graph preview on Netlify
-            fetch('/.netlify/functions/saveMetadata', {
+            // Send metadata to Netlify function to save as a file
+            fetch('/.netlify/functions/saveArticle', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -91,6 +86,11 @@
                     title: title,
                     image: imageUrl
                 })
+            }).then(response => response.json())
+            .then(data => {
+                console.log("Article created:", data);
+            }).catch(error => {
+                console.error("Error saving article:", error);
             });
         }
 
