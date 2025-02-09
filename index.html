@@ -17,9 +17,6 @@
                 <label for="fake_image_url">Preview Image URL</label>
                 <input type="text" name="fake_image_url" id="fake_image_url" class="form-control" required>
 
-                <label for="troll_image_url">Troll Image URL (Final Redirect)</label>
-                <input type="text" name="troll_image_url" id="troll_image_url" class="form-control" value="https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg" required>
-                
                 <br />
                 <button type="button" class="btn btn-primary btn-block" onclick="generateLink()">Create</button>
             </form>
@@ -36,7 +33,6 @@
         function generateLink() {
             const title = document.getElementById('fake_title').value;
             const imageUrl = document.getElementById('fake_image_url').value;
-            const trollUrl = document.getElementById('troll_image_url').value;
             const linkInput = document.getElementById('generatedLink');
 
             if (!title || !imageUrl) {
@@ -48,8 +44,14 @@
             const shortId = Math.random().toString(36).substr(2, 5);
             const articlePath = `article/${sanitizedTitle}-${shortId}`;
 
-            const generatedLink = `https://worlddailyreport.com/${articlePath}?image=${encodeURIComponent(imageUrl)}&headline=${encodeURIComponent(title)}`;
+            const generatedLink = `https://worlddailyreport.com/${articlePath}`;
             linkInput.value = generatedLink;
+
+            // Store the metadata for iMessage preview
+            localStorage.setItem(generatedLink, JSON.stringify({
+                title: title,
+                image: imageUrl
+            }));
         }
 
         function copyLink() {
