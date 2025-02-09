@@ -1,8 +1,7 @@
 [build]
-  functions = "netlify/functions"
-  publish = "public"
+  publish = "."
 
 [[redirects]]
-  from = "/article/*"
-  to = "/.netlify/functions/redirect"
+  from = "/article/:slug"
+  to = "/article.html"
   status = 200
