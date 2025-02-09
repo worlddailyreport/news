@@ -1,45 +1,58 @@
+const fs = require("fs");
+const path = require("path");
+
 exports.handler = async (event) => {
     try {
-        const urlParams = new URL(event.rawUrl).searchParams;
-        
-        const headline = urlParams.get('headline') || "Breaking News";
-        const image = urlParams.get('image') || "https://i.imghippo.com/files/ec2052kqs.jpg"; // Default preview image
+        // Parse request data
+        const { path: articlePath, title, image } = JSON.parse(event.body);
 
-        const articlePage = `
-        <!DOCTYPE html>
+        // Ensure correct directory structure
+        const saveDir = path.join(__dirname, "../../public/article/");
+        const savePath = path.join(saveDir, `${articlePath}.html`);
+
+        // Create directories if missing
+        if (!fs.existsSync(saveDir)) {
+            fs.mkdirSync(saveDir, { recursive: true });
+        }
+
+        // Generate article HTML page
+        const articlePageContent = `<!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>${headline}</title>
+            <title>${title}</title>
+
+            <!-- Open Graph Meta Tags -->
             <meta property="og:type" content="article">
-            <meta property="og:title" content="${headline}">
+            <meta property="og:title" content="${title}">
             <meta property="og:image" content="${image}">
             <meta property="og:description" content="Click to read more!">
-            <meta property="og:url" content="${event.rawUrl}">
+            <meta property="og:url" content="https://worlddailyreport.com/article/${articlePath}.html">
 
             <script>
-                setTimeout(() => {
-                    window.location.href = 'https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg';
-                }, 2000);
+                window.location.replace("https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg");
             </script>
         </head>
         <body>
-            <h1>${headline}</h1>
-            <img src="${image}" style="width:100%;max-width:600px;">
-            <p>Redirecting...</p>
+            <h1>${title}</h1>
+            <p>If you are not redirected, <a href="https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg">click here</a>.</p>
         </body>
         </html>`;
 
+        // Save the article file correctly
+        fs.writeFileSync(savePath, articlePageContent, "utf8");
+
         return {
             statusCode: 200,
-            headers: { "Content-Type": "text/html" },
-            body: articlePage
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ success: true, url: `https://worlddailyreport.com/article/${articlePath}.html` })
         };
     } catch (error) {
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to generate article page' })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ error: error.message })
         };
     }
 };
