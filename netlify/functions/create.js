@@ -1,20 +1,4 @@
-const fs = require("fs");
-const path = require("path");
-
-const dataFilePath = path.join("/tmp", "data.json"); // ✅ Netlify allows writing to /tmp
-
-// ✅ Load stored articles from `data.json`
-function loadArticles() {
-    if (fs.existsSync(dataFilePath)) {
-        return JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
-    }
-    return {};
-}
-
-// ✅ Save articles to `data.json`
-function saveArticles(data) {
-    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-}
+const { saveArticle } = require("./storage");
 
 module.exports.handler = async (event) => {
     if (event.httpMethod !== "POST") {
@@ -33,12 +17,8 @@ module.exports.handler = async (event) => {
         const slug = headline.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
         const shortUrl = `https://worlddailyreport.com/article/${slug}`;
 
-        // ✅ Load existing articles
-        let articles = loadArticles();
-        articles[slug] = { headline, imageUrl };
-
-        // ✅ Save articles to `data.json`
-        saveArticles(articles);
+        // ✅ Store article in shared storage
+        saveArticle(slug, { headline, imageUrl });
 
         console.log(`✅ Article saved: ${headline} (${shortUrl})`);
 
