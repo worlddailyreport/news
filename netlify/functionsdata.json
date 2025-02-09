@@ -1,0 +1,4 @@
+/netlify/functions
+│── create.js  ✅ (Creates & stores articles)
+│── redirect.js ✅ (Retrieves articles)
+│── data.json  ✅ (Temporary storage for articles)
