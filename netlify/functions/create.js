@@ -1,12 +1,11 @@
-import { set, get } from "@netlify/functions/storage";
+let articles = {}; // ✅ Stores generated articles in memory
 
 export const handler = async (event) => {
-    try {
-        if (event.httpMethod !== "POST") {
-            return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
-        }
+    if (event.httpMethod !== "POST") {
+        return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
+    }
 
-        // ✅ Parse user input
+    try {
         const { headline, imageUrl } = JSON.parse(event.body);
 
         if (!headline || !imageUrl) {
@@ -18,8 +17,8 @@ export const handler = async (event) => {
         const slug = headline.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
         const shortUrl = `https://worlddailyreport.com/article/${slug}`;
 
-        // ✅ Store article in Netlify's Persistent Storage
-        await set(`article_${slug}`, JSON.stringify({ headline, imageUrl }));
+        // ✅ Store article in memory
+        articles[slug] = { headline, imageUrl };
 
         console.log(`✅ Article saved: ${headline} (${shortUrl})`);
 
@@ -28,7 +27,7 @@ export const handler = async (event) => {
             body: JSON.stringify({ shortUrl }),
         };
     } catch (err) {
-        console.error("❌ Error in create.js:", err);
+        console.error("❌ Error saving article:", err);
         return { statusCode: 500, body: JSON.stringify({ error: "Server error while generating link." }) };
     }
 };
