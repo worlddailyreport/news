@@ -1,6 +1,6 @@
 let articles = {}; // ✅ Stores generated articles in memory
 
-export const handler = async (event) => {
+module.exports.handler = async (event) => {
     if (event.httpMethod !== "POST") {
         return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
     }
