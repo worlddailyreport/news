@@ -1,10 +1,23 @@
-let articles = {}; // ✅ Ensure this is declared globally
+const fs = require("fs");
+const path = require("path");
+
+const dataFilePath = path.join("/tmp", "data.json"); // ✅ Netlify allows writing to /tmp
+
+// ✅ Load stored articles from `data.json`
+function loadArticles() {
+    if (fs.existsSync(dataFilePath)) {
+        return JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
+    }
+    return {};
+}
 
 module.exports.handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
 
-        // ✅ Check if the article exists
+        // ✅ Retrieve articles from `data.json`
+        let articles = loadArticles();
+
         if (!articles[slug]) {
             console.error(`❌ No article found for slug: ${slug}`);
             return { statusCode: 404, body: "Error: Article not found." };
