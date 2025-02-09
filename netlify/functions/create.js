@@ -1,7 +1,6 @@
-const { getArticles, saveArticle } = require("./storage");
+import { set } from "@netlify/functions/storage";
 
-
-module.exports.handler = async (event) => {
+export const handler = async (event) => {
     if (event.httpMethod !== "POST") {
         return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
     }
@@ -18,8 +17,8 @@ module.exports.handler = async (event) => {
         const slug = headline.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
         const shortUrl = `https://worlddailyreport.com/article/${slug}`;
 
-        // ✅ Store article in shared storage
-        saveArticle(slug, { headline, imageUrl });
+        // ✅ Store article in Netlify's KV Storage
+        await set(`article_${slug}`, JSON.stringify({ headline, imageUrl }));
 
         console.log(`✅ Article saved: ${headline} (${shortUrl})`);
 
