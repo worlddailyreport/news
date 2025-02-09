@@ -3,34 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breaking News</title>
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="" id="metaHeadline">
-    <meta property="og:image" content="" id="metaImage">
+    <title>Loading article...</title>
+
+    <!-- ✅ Meta tags will be filled dynamically -->
+    <meta property="og:title" content="">
+    <meta property="og:image" content="">
     <meta property="og:description" content="Click to read more!">
+    <meta property="og:type" content="website">
     <meta property="og:url" content="">
 
-    <script>
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const image = urlParams.get('image');
-            const headline = urlParams.get('headline');
-            const currentUrl = window.location.href;
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="">
+    <meta name="twitter:description" content="Click to read more!">
+    <meta name="twitter:image" content="">
 
-            if (image && headline) {
-                document.querySelector('meta[property="og:image"]').setAttribute('content', image);
-                document.querySelector('meta[property="og:title"]').setAttribute('content', headline);
-                document.querySelector('meta[property="og:url"]').setAttribute('content', currentUrl);
+    <!-- ✅ Redirects to Barry Woods after 3 seconds -->
+    <meta id="redirect-meta" http-equiv="refresh" content="3;url=https://i.imghippo.com/files/JfSn7929Qs.jpg">
+
+    <script>
+        async function loadArticle() {
+            // ✅ Extract slug from URL
+            const slug = window.location.pathname.split("/").pop();
+
+            // ✅ Fetch stored articles
+            const response = await fetch("/data.json");
+            const articles = await response.json();
+
+            if (!articles[slug]) {
+                document.body.innerHTML = "<h1>Error: Article Not Found</h1>";
+                return;
             }
 
-            // Redirect after preview loads
-            setTimeout(() => {
-                window.location.href = 'https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg';
-            }, 2000);
-        };
+            const { headline, imageUrl } = articles[slug];
+
+            // ✅ Update page title
+            document.title = headline;
+
+            // ✅ Update Open Graph Meta Tags for iMessage Preview
+            document.querySelector('meta[property="og:title"]').setAttribute("content", headline);
+            document.querySelector('meta[property="og:image"]').setAttribute("content", imageUrl);
+            document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
+
+            document.querySelector('meta[name="twitter:title"]').setAttribute("content", headline);
+            document.querySelector('meta[name="twitter:image"]').setAttribute("content", imageUrl);
+
+            // ✅ Display article
+            document.body.innerHTML = `
+                <h1>${headline}</h1>
+                <img src="${imageUrl}" alt="Article Image">
+                <p>Loading article...</p>
+            `;
+        }
+
+        loadArticle();
     </script>
+
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        h1 { font-size: 2em; }
+        img { max-width: 80%; margin-top: 20px; }
+        p { font-size: 1.2em; color: gray; }
+    </style>
 </head>
 <body>
-    <h1>Redirecting...</h1>
+    <h1>Loading article...</h1>
 </body>
 </html>
