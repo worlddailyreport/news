@@ -1,4 +1,5 @@
-const { saveArticle } = require("./storage");
+const { getArticles, saveArticle } = require("./storage");
+
 
 module.exports.handler = async (event) => {
     if (event.httpMethod !== "POST") {
