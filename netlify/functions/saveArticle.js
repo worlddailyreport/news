@@ -6,16 +6,16 @@ exports.handler = async (event) => {
         // Parse request data
         const { path: articlePath, title, image } = JSON.parse(event.body);
 
-        // Ensure correct directory and file extension
+        // Ensure correct directory and filename structure
         const saveDir = path.join(__dirname, "../../public/article/");
         const savePath = path.join(saveDir, `${articlePath}.html`);
 
-        // Create directories if missing
+        // Create directory if missing
         if (!fs.existsSync(saveDir)) {
             fs.mkdirSync(saveDir, { recursive: true });
         }
 
-        // Generate article HTML page
+        // Generate the article HTML page with redirect
         const articlePageContent = `<!DOCTYPE html>
         <html lang="en">
         <head>
