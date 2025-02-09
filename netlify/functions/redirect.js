@@ -1,14 +1,8 @@
-const dotenv = require("dotenv");
-
-dotenv.config(); // ✅ Load environment variables
-
 module.exports.handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
 
-        // ✅ Load stored articles from Netlify Environment Variable
-        let articles = JSON.parse(process.env.ARTICLES_DB || "{}");
-
+        // ✅ Check if the article exists in memory
         if (!articles[slug]) {
             console.error(`❌ No article found for slug: ${slug}`);
             return { statusCode: 404, body: "Error: Article not found." };
