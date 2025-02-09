@@ -3,25 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading article...</title>
-
-    <!-- ✅ Meta tags will be dynamically updated -->
-    <meta property="og:title" content="">
-    <meta property="og:image" content="">
-    <meta property="og:description" content="Click to read more!">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="">
-    <meta name="twitter:description" content="Click to read more!">
-    <meta name="twitter:image" content="">
-
-    <!-- ✅ Redirect after 3 seconds to Barry Woods -->
-    <meta id="redirect-meta" http-equiv="refresh" content="3;url=https://i.imghippo.com/files/JfSn7929Qs.jpg">
+    <title>Redirecting...</title>
 
     <script>
-        async function loadArticle() {
+        async function redirectToImage() {
             // ✅ Extract slug from URL
             const slug = window.location.pathname.split("/").pop();
 
@@ -29,38 +14,20 @@
             const response = await fetch(`/api/get-article?slug=${slug}`);
             const article = await response.json();
 
-            if (!article.headline) {
+            if (!article.imageUrl) {
                 document.body.innerHTML = "<h1>Error: Article Not Found</h1>";
                 return;
             }
 
-            // ✅ Update page title and meta tags
-            document.title = article.headline;
-            document.querySelector('meta[property="og:title"]').setAttribute("content", article.headline);
-            document.querySelector('meta[property="og:image"]').setAttribute("content", article.imageUrl);
-            document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
-            document.querySelector('meta[name="twitter:title"]').setAttribute("content", article.headline);
-            document.querySelector('meta[name="twitter:image"]').setAttribute("content", article.imageUrl);
-
-            // ✅ Display article
-            document.body.innerHTML = `
-                <h1>${article.headline}</h1>
-                <img src="${article.imageUrl}" alt="Article Image">
-                <p>Loading article...</p>
-            `;
+            // ✅ Instantly redirect to the image
+            window.location.href = article.imageUrl;
         }
 
-        loadArticle();
+        redirectToImage();
     </script>
 
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        h1 { font-size: 2em; }
-        img { max-width: 80%; margin-top: 20px; }
-        p { font-size: 1.2em; color: gray; }
-    </style>
 </head>
 <body>
-    <h1>Loading article...</h1>
+    <h1>Redirecting...</h1>
 </body>
 </html>
