@@ -1,20 +1,4 @@
-import fs from "fs";
-import path from "path";
-
-const dataFilePath = path.resolve(__dirname, "data.json"); // ✅ Path to JSON file
-
-// ✅ Load stored articles from `data.json`
-function loadArticles() {
-    if (fs.existsSync(dataFilePath)) {
-        return JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
-    }
-    return {};
-}
-
-// ✅ Save articles to `data.json`
-function saveArticles(data) {
-    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-}
+import { set } from "@netlify/functions/storage";
 
 export const handler = async (event) => {
     if (event.httpMethod !== "POST") {
@@ -23,7 +7,6 @@ export const handler = async (event) => {
 
     try {
         const { headline, imageUrl } = JSON.parse(event.body);
-
         if (!headline || !imageUrl) {
             return { statusCode: 400, body: JSON.stringify({ error: "Invalid input" }) };
         }
@@ -32,12 +15,8 @@ export const handler = async (event) => {
         const slug = headline.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
         const shortUrl = `https://worlddailyreport.com/article/${slug}`;
 
-        // ✅ Load existing articles from `data.json`
-        let articles = loadArticles();
-        articles[slug] = { headline, imageUrl };
-
-        // ✅ Save back to `data.json`
-        saveArticles(articles);
+        // ✅ Store article in Netlify’s Storage API
+        await set(`article_${slug}`, JSON.stringify({ headline, imageUrl }));
 
         console.log(`✅ Article saved: ${headline} (${shortUrl})`);
 
