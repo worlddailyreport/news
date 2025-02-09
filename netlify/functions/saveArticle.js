@@ -13,8 +13,8 @@ exports.handler = async (event) => {
             fs.mkdirSync(saveDir, { recursive: true });
         }
 
-        // Generate a correct HTML file
-        const previewPageContent = `<!DOCTYPE html>
+        // Generate article page WITHOUT `preview.html`
+        const articlePageContent = `<!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
@@ -29,19 +29,18 @@ exports.handler = async (event) => {
             <meta property="og:url" content="https://worlddailyreport.com/${articlePath}">
 
             <script>
-                setTimeout(() => {
-                    window.location.href = "https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg";
-                }, 5000);
+                // Instantly redirect to Barry Woods image
+                window.location.replace("https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg");
             </script>
         </head>
         <body>
             <h1>${title}</h1>
-            <p>Redirecting...</p>
+            <p>If you are not redirected, <a href="https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg">click here</a>.</p>
         </body>
         </html>`;
 
         // Save the file as an actual HTML page
-        fs.writeFileSync(savePath, previewPageContent, "utf8");
+        fs.writeFileSync(savePath, articlePageContent, "utf8");
 
         return {
             statusCode: 200,
