@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Breaking News</title>
+
+    <!-- Open Graph Meta Tags for iMessage Preview -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Breaking News" id="ogTitle">
+    <meta property="og:image" content="" id="ogImage">
+    <meta property="og:description" content="Click to read more!">
+    <meta property="og:url" content="">
+
+    <script>
+        // Extract URL parameters for headline & image
+        const urlParams = new URLSearchParams(window.location.search);
+        const headline = urlParams.get('headline') || "Breaking News";
+        const image = urlParams.get('image') || "";
+
+        // Set Open Graph metadata dynamically
+        document.title = headline;
+        document.querySelector('meta[property="og:title"]').setAttribute("content", headline);
+        document.querySelector('meta[property="og:image"]').setAttribute("content", image);
+
+        // Redirect after a short delay
+        setTimeout(() => {
+            window.location.replace("https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg");
+        }, 2000);
+    </script>
+</head>
+<body>
+    <h1 id="headlineText"></h1>
+    <p>Redirecting...</p>
+</body>
+</html>
