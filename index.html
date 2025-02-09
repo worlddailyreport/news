@@ -49,8 +49,8 @@
             <label for="headline">Preview Title</label>
             <input type="text" id="headline" class="form-control" required>
 
-            <label for="imageUpload">Upload Preview Image</label>
-            <input type="file" id="imageUpload" class="form-control" accept="image/*" required>
+            <label for="imageUrl">Paste Image URL</label>
+            <input type="text" id="imageUrl" class="form-control" required>
 
             <br />
             <button type="button" class="btn btn-primary btn-block" onclick="generateLink()">Create</button>
@@ -64,40 +64,29 @@
     </div>
 
     <script>
-        async function generateLink() {
+        function generateLink() {
             const headline = document.getElementById('headline').value;
-            const fileInput = document.getElementById('imageUpload');
+            const imageUrl = document.getElementById('imageUrl').value;
             const linkInput = document.getElementById('generatedLink');
 
-            if (!headline || !fileInput.files.length) {
-                alert('Please enter a headline and upload an image.');
+            if (!headline || !imageUrl) {
+                alert('Please enter a headline and paste an image URL.');
                 return;
             }
 
-            const file = fileInput.files[0];
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', 'wdr_public_uploads');
+            const sanitizedHeadline = headline.replace(/\s+/g, '-').toLowerCase();
+            const shortId = Math.random().toString(36).substr(2, 5);
+            const articlePath = `article/${sanitizedHeadline}-${shortId}`;
 
-            try {
-                const response = await fetch('https://api.cloudinary.com/v1_1/dgeragc2e/image/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-                const previewImageUrl = data.secure_url;
+            // Correctly format the final link
+            const maskedLink = `https://worlddailyreport.com/${articlePath}`;
+            linkInput.value = maskedLink;
 
-                const sanitizedHeadline = headline.replace(/\s+/g, '-').toLowerCase();
-                const shortId = Math.random().toString(36).substr(2, 5);
-                const articlePath = `article/${sanitizedHeadline}-${shortId}`;
-
-                // Correctly format the final link
-                const maskedLink = `https://worlddailyreport.com/${articlePath}`;
-                linkInput.value = maskedLink;
-            } catch (error) {
-                console.error('Error uploading image:', error);
-                alert('Image upload failed.');
-            }
+            // Save Open Graph meta tags dynamically for iMessage preview
+            localStorage.setItem(maskedLink, JSON.stringify({
+                title: headline,
+                image: imageUrl
+            }));
         }
 
         function copyLink() {
