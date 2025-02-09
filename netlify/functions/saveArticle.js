@@ -6,7 +6,7 @@ exports.handler = async (event) => {
         // Parse request data
         const { path: articlePath, title, image } = JSON.parse(event.body);
 
-        // Ensure correct directory and file extension
+        // Ensure correct directory structure
         const saveDir = path.join(__dirname, "../../public/article/");
         const savePath = path.join(saveDir, `${articlePath}.html`);
 
@@ -40,7 +40,7 @@ exports.handler = async (event) => {
         </body>
         </html>`;
 
-        // Save the article file properly
+        // Save the article file correctly
         fs.writeFileSync(savePath, articlePageContent, "utf8");
 
         return {
