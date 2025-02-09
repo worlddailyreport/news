@@ -3,17 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fake News Generator</title>
+    <title>World Daily Report</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Create Your Own Troll News!</h1>
-        <input type="text" id="headline" placeholder="Enter a troll headline">
-        <input type="text" id="imageUrl" placeholder="Enter an image URL">
-        <button onclick="generateFakeNews()">Generate Link</button>
-        <p id="result"></p>
-    </div>
+    <header>
+        <h1>World Daily Report</h1>
+    </header>
+
+    <main>
+        <section class="news-form">
+            <h2>Create Your Own News Headline</h2>
+            <input type="text" id="headline" placeholder="Enter a troll headline">
+            <input type="text" id="imageUrl" placeholder="Enter an image URL">
+            <button onclick="generateFakeNews()">Generate Fake Link</button>
+        </section>
+
+        <section id="generated-links">
+            <h2>Recent Fake News</h2>
+            <ul id="news-list"></ul>
+        </section>
+    </main>
 
     <script src="script.js"></script>
 </body>
