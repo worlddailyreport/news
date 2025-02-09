@@ -15,18 +15,19 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const urlParams = new URLSearchParams(window.location.search);
-            const headline = urlParams.get('headline') || "Breaking News";
-            const image = urlParams.get('image') || "https://via.placeholder.com/600x315";
+            const headline = urlParams.get('headline');
+            const image = urlParams.get('image');
 
-            document.title = headline;
-            document.querySelector("meta[property='og:title']").setAttribute("content", headline);
-            document.querySelector("meta[property='og:image']").setAttribute("content", image);
+            if (headline) {
+                document.title = headline;
+                document.querySelector("meta[property='og:title']").setAttribute("content", headline);
+            }
+
+            if (image) {
+                document.querySelector("meta[property='og:image']").setAttribute("content", image);
+            }
+
             document.querySelector("meta[property='og:url']").setAttribute("content", window.location.href);
-
-            // Ensure meta tags are updated before redirect
-            setTimeout(() => {
-                window.location.href = "https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg";
-            }, 5000); // Increased delay for iMessage to scrape meta tags
         });
     </script>
 </head>
