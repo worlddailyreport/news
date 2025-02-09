@@ -11,16 +11,23 @@
             const slug = window.location.pathname.split("/").pop();
 
             // ✅ Fetch stored article
-            const response = await fetch(`/api/get-article?slug=${slug}`);
-            const article = await response.json();
+            try {
+                const response = await fetch(`/api/get-article?slug=${slug}`);
+                if (!response.ok) throw new Error("Article not found");
 
-            if (!article.imageUrl) {
+                const article = await response.json();
+
+                if (!article.imageUrl) {
+                    document.body.innerHTML = "<h1>Error: Article Not Found</h1>";
+                    return;
+                }
+
+                // ✅ Instantly redirect to the image
+                window.location.href = article.imageUrl;
+            } catch (error) {
+                console.error("❌ Failed to load article:", error);
                 document.body.innerHTML = "<h1>Error: Article Not Found</h1>";
-                return;
             }
-
-            // ✅ Instantly redirect to the image
-            window.location.href = article.imageUrl;
         }
 
         redirectToImage();
