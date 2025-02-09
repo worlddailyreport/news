@@ -8,12 +8,12 @@ exports.handler = async (event) => {
         const saveDir = path.join(__dirname, "../../public", path.dirname(articlePath));
         const savePath = path.join(__dirname, "../../public", articlePath);
 
-        // Ensure directory exists before saving the file
+        // Ensure directory exists
         if (!fs.existsSync(saveDir)) {
             fs.mkdirSync(saveDir, { recursive: true });
         }
 
-        // Generate a correct HTML page with Open Graph metadata
+        // Generate a correct HTML file
         const previewPageContent = `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -28,13 +28,7 @@ exports.handler = async (event) => {
             <meta property="og:description" content="Click to read more!">
             <meta property="og:url" content="https://worlddailyreport.com/${articlePath}">
 
-            <!-- Prevent caching issues -->
-            <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-            <meta http-equiv="Pragma" content="no-cache">
-            <meta http-equiv="Expires" content="0">
-
             <script>
-                // Wait 5 seconds for iMessage to load metadata before redirecting
                 setTimeout(() => {
                     window.location.href = "https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg";
                 }, 5000);
@@ -46,7 +40,7 @@ exports.handler = async (event) => {
         </body>
         </html>`;
 
-        // Save the HTML file properly
+        // Save the file as an actual HTML page
         fs.writeFileSync(savePath, previewPageContent, "utf8");
 
         return {
