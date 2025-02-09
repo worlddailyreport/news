@@ -1,11 +1,11 @@
 [build]
   functions = "netlify/functions"
-  publish = "/"  # Change this if `index.html` is NOT inside `public/`
+  publish = "public"
 
 [functions]
   directory = "netlify/functions"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/article/*"
+  to = "/article/:splat"
   status = 200
