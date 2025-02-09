@@ -1,4 +1,4 @@
-import { set } from "@netlify/edge-functions";
+let articles = {}; // In-memory storage for articles
 
 export const handler = async (event) => {
     if (event.httpMethod !== "POST") {
@@ -16,14 +16,8 @@ export const handler = async (event) => {
         const slug = headline.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
         const shortUrl = `https://worlddailyreport.com/article/${slug}`;
 
-        // ✅ Ensure the function does NOT recursively call itself
-        if (slug.includes("article")) {
-            console.error("❌ Detected possible recursion. Stopping execution.");
-            return { statusCode: 500, body: JSON.stringify({ error: "Recursive call detected" }) };
-        }
-
-        // ✅ Store article in Netlify's Edge Config (Key-Value Storage)
-        await set(`article_${slug}`, JSON.stringify({ headline, imageUrl }));
+        // ✅ Store the article in memory
+        articles[slug] = { headline, imageUrl };
 
         console.log(`✅ Article saved: ${headline} (${shortUrl})`);
 
