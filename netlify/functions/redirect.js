@@ -1,19 +1,14 @@
-import { get } from "@netlify/functions/storage";
-
 export const handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
-        const storageKey = `article_${slug}`;
 
-        // ✅ Retrieve article from Netlify's Persistent Storage
-        const articleData = await get(storageKey);
-
-        if (!articleData) {
+        // ✅ Retrieve article from in-memory storage
+        if (!articles[slug]) {
             console.error(`❌ No article found for slug: ${slug}`);
             return { statusCode: 404, body: "Error: Article not found." };
         }
 
-        const { headline, imageUrl } = JSON.parse(articleData);
+        const { headline, imageUrl } = articles[slug];
 
         console.log(`✅ Showing article: ${headline}`);
 
