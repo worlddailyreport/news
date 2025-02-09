@@ -1,29 +1,19 @@
-import fs from "fs";
-import path from "path";
-
-const dataFilePath = path.resolve("/tmp", "data.json"); // ✅ Netlify allows writing to `/tmp`
-
-// ✅ Load stored articles from `data.json`
-function loadArticles() {
-    if (fs.existsSync(dataFilePath)) {
-        return JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
-    }
-    return {};
-}
+import { get } from "@netlify/functions/storage";
 
 export const handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
+        const storageKey = `article_${slug}`;
 
-        // ✅ Retrieve articles from `data.json`
-        let articles = loadArticles();
+        // ✅ Retrieve article from Netlify's Persistent Storage
+        const articleData = await get(storageKey);
 
-        if (!articles[slug]) {
+        if (!articleData) {
             console.error(`❌ No article found for slug: ${slug}`);
             return { statusCode: 404, body: "Error: Article not found." };
         }
 
-        const { headline, imageUrl } = articles[slug];
+        const { headline, imageUrl } = JSON.parse(articleData);
 
         console.log(`✅ Showing article: ${headline}`);
 
