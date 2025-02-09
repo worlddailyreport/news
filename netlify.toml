@@ -1,13 +1,7 @@
 [build]
-  functions = "netlify/functions"
-  publish = "."  # Ensures Netlify serves index.html
+  publish = "."
 
 [[redirects]]
   from = "/article/*"
-  to = "/.netlify/functions/redirect"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
+  to = "/articles/:splat.html"
   status = 200
