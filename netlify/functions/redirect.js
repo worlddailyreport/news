@@ -1,10 +1,12 @@
-let articles = {}; // ✅ Stores generated articles in memory
+import { get } from "@netlify/functions/storage";
 
 export const handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
 
-        // ✅ Check if the article exists
+        // ✅ Load stored articles from Netlify Environment Variable
+        let articles = JSON.parse(process.env.ARTICLES_DB || "{}");
+
         if (!articles[slug]) {
             console.error(`❌ No article found for slug: ${slug}`);
             return { statusCode: 404, body: "Error: Article not found." };
