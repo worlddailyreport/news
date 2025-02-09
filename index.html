@@ -91,30 +91,9 @@
                 const shortId = Math.random().toString(36).substr(2, 5);
                 const articlePath = `article/${sanitizedHeadline}-${shortId}`;
 
-                // Save Open Graph meta tags dynamically
-                const metadata = `
-                    <meta property="og:type" content="article">
-                    <meta property="og:title" content="${headline}">
-                    <meta property="og:image" content="${previewImageUrl}">
-                    <meta property="og:description" content="Click to read more!">
-                    <meta property="og:url" content="https://worlddailyreport.com/${articlePath}">
-                    <script>window.location.href = 'https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg';</script>
-                `;
-
-                // Save the metadata file
-                await fetch('/.netlify/functions/saveMetadata', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        path: articlePath,
-                        metadata: metadata
-                    })
-                });
-
                 // Correctly format the final link
                 const maskedLink = `https://worlddailyreport.com/${articlePath}`;
                 linkInput.value = maskedLink;
-
             } catch (error) {
                 console.error('Error uploading image:', error);
                 alert('Image upload failed.');
