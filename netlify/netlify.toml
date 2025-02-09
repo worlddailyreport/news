@@ -1,8 +1,12 @@
-
 [build]
   publish = "."
 
 [[redirects]]
   from = "/article/:slug"
   to = "/article.html"
+  status = 200
+
+[[redirects]]
+  from = "/api/get-article"
+  to = "/.netlify/functions/get-article"
   status = 200
