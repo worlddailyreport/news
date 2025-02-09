@@ -1,8 +1,8 @@
 [build]
-  functions = "netlify/functions"  # ✅ This tells Netlify where to find serverless functions
-  publish = "/"  # ✅ This should be set correctly depending on your project structure
+  functions = "netlify/functions"
+  publish = "/"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/article/*"
+  to = "/.netlify/functions/redirect"
   status = 200
