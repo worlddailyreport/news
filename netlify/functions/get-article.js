@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 
-// ✅ Use Netlify's writable `/tmp/` directory
 const dataFilePath = path.join("/tmp", "data.json");
 
 // ✅ Load stored articles from `/tmp/data.json`
@@ -19,7 +18,6 @@ module.exports.handler = async (event) => {
             return { statusCode: 400, body: JSON.stringify({ error: "Missing slug" }) };
         }
 
-        // ✅ Retrieve articles from `/tmp/data.json`
         let articles = loadArticles();
 
         if (!articles[slug]) {
