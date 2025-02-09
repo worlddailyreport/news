@@ -1,27 +1,29 @@
-<script>
-    function generateLink() {
-        const headline = document.getElementById('headline').value;
-        const imageUrl = document.getElementById('imageUrl').value;
-        const linkInput = document.getElementById('generatedLink');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Daily Report</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Create Your Fake News Headline</h1>
+        <div class="form-container">
+            <form class="form-group" action="/article" accept-charset="UTF-8" method="post">
+                <label for="fake_title">Preview Title</label>
+                <input type="text" name="fake_title" id="fake_title" class="form-control" required>
 
-        if (!headline || !imageUrl) {
-            alert('Please enter a headline and paste an image URL.');
-            return;
-        }
+                <label for="fake_image_url">Preview Image URL</label>
+                <input type="text" name="fake_image_url" id="fake_image_url" class="form-control" required>
 
-        const sanitizedHeadline = headline.replace(/\s+/g, '-').toLowerCase();
-        const shortId = Math.random().toString(36).substr(2, 5);
-        const articlePath = `article/${sanitizedHeadline}-${shortId}`;
-
-        // Generate link with parameters for iMessage preview
-        const maskedLink = `https://worlddailyreport.com/${articlePath}?image=${encodeURIComponent(imageUrl)}&headline=${encodeURIComponent(headline)}`;
-        linkInput.value = maskedLink;
-    }
-
-    function copyLink() {
-        const linkInput = document.getElementById('generatedLink');
-        linkInput.select();
-        document.execCommand('copy');
-        alert('Link copied to clipboard!');
-    }
-</script>
+                <label for="troll_image_url">Troll Image URL (Final Redirect)</label>
+                <input type="text" name="troll_image_url" id="troll_image_url" class="form-control" value="https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg" required>
+                
+                <br />
+                <input type="submit" name="commit" value="Create" class="btn btn-primary btn-block">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
