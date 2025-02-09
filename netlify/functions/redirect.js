@@ -1,8 +1,10 @@
+let articles = {}; // ✅ Ensure this is declared globally
+
 export const handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
 
-        // ✅ Retrieve article from in-memory storage
+        // ✅ Check if the article exists
         if (!articles[slug]) {
             console.error(`❌ No article found for slug: ${slug}`);
             return { statusCode: 404, body: "Error: Article not found." };
@@ -48,13 +50,4 @@ export const handler = async (event) => {
                 <body>
                     <h1>${headline}</h1>
                     <img src="${imageUrl}">
-                    <p>Loading article...</p>
-                </body>
-                </html>
-            `,
-        };
-    } catch (err) {
-        console.error("❌ Error retrieving article:", err);
-        return { statusCode: 500, body: "Server error." };
-    }
-};
+                    <p>Loadin
