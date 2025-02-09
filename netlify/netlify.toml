@@ -5,8 +5,10 @@
   from = "/article/:slug"
   to = "/article.html"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/api/get-article"
   to = "/.netlify/functions/get-article"
   status = 200
+  force = true
