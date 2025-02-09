@@ -1,21 +1,27 @@
-exports.handler = async (event) => {
+import { get } from "@netlify/edge-functions";
+
+export const handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
+        const storageKey = `article_${slug}`;
 
-        // Load articles from Netlify Environment Variables
-        let storedArticles = {};
-        if (process.env.ARTICLES_DB) {
-            storedArticles = JSON.parse(process.env.ARTICLES_DB);
+        // ✅ Prevent recursion - Ensure the function doesn't re-call itself
+        if (!slug || slug.includes("article")) {
+            console.error("❌ Recursive call detected. Stopping execution.");
+            return { statusCode: 400, body: "Invalid request" };
         }
 
-        if (!storedArticles[slug]) {
-            console.error(`❌ No data found for slug: ${slug}`);
+        // ✅ Retrieve article from Netlify's Edge Config storage
+        const articleData = await get(storageKey);
+
+        if (!articleData) {
+            console.error(`❌ No article found for slug: ${slug}`);
             return { statusCode: 404, body: "Article not found" };
         }
 
-        const { headline, imageUrl } = storedArticles[slug];
+        const { headline, imageUrl } = JSON.parse(articleData);
 
-        console.log(`✅ Showing fake article: ${headline} with image ${imageUrl}`);
+        console.log(`✅ Showing article: ${headline}`);
 
         return {
             statusCode: 200,
@@ -36,30 +42,4 @@ exports.handler = async (event) => {
                     <meta property="og:type" content="website">
                     <meta property="og:url" content="${event.rawUrl}">
 
-                    <meta name="twitter:card" content="summary_large_image">
-                    <meta name="twitter:title" content="${headline}">
-                    <meta name="twitter:description" content="Click to read more!">
-                    <meta name="twitter:image" content="${imageUrl}">
-
-                    <meta http-equiv="refresh" content="3;url=https://i.imghippo.com/files/JfSn7929Qs.jpg">
-
-                    <style>
-                        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-                        h1 { font-size: 2em; }
-                        img { max-width: 80%; margin-top: 20px; }
-                        p { font-size: 1.2em; color: gray; }
-                    </style>
-                </head>
-                <body>
-                    <h1>${headline}</h1>
-                    <img src="${imageUrl}">
-                    <p>Loading article...</p>
-                </body>
-                </html>
-            `,
-        };
-    } catch (err) {
-        console.error("❌ Server error:", err);
-        return { statusCode: 500, body: "Server error" };
-    }
-};
+                    <meta name="twitter:card" content="summary_large_image
