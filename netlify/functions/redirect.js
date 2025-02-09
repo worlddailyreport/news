@@ -1,11 +1,22 @@
-import { get } from "@netlify/functions/storage";
+import fs from "fs";
+import path from "path";
+
+const dataFilePath = path.resolve(__dirname, "data.json"); // ✅ Path to JSON file
+
+// ✅ Load stored articles from `data.json`
+function loadArticles() {
+    if (fs.existsSync(dataFilePath)) {
+        return JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
+    }
+    return {};
+}
 
 export const handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
 
-        // ✅ Load stored articles from Netlify Environment Variable
-        let articles = JSON.parse(process.env.ARTICLES_DB || "{}");
+        // ✅ Retrieve articles from `data.json`
+        let articles = loadArticles();
 
         if (!articles[slug]) {
             console.error(`❌ No article found for slug: ${slug}`);
