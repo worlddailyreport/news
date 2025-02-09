@@ -1,22 +1,6 @@
-const fs = require("fs");
-const path = require("path");
+import { set } from "@netlify/functions/storage";
 
-const dataFilePath = path.join(__dirname, "../../public/data.json"); // ✅ Store articles in /public/data.json
-
-// ✅ Load existing articles
-function loadArticles() {
-    if (fs.existsSync(dataFilePath)) {
-        return JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
-    }
-    return {};
-}
-
-// ✅ Save articles to data.json
-function saveArticles(data) {
-    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-}
-
-module.exports.handler = async (event) => {
+export const handler = async (event) => {
     if (event.httpMethod !== "POST") {
         return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
     }
@@ -33,12 +17,8 @@ module.exports.handler = async (event) => {
         const slug = headline.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
         const shortUrl = `/article/${slug}`;
 
-        // ✅ Load and update stored articles
-        let articles = loadArticles();
-        articles[slug] = { headline, imageUrl };
-
-        // ✅ Save back to data.json
-        saveArticles(articles);
+        // ✅ Store article in Netlify KV Storage
+        await set(`article_${slug}`, JSON.stringify({ headline, imageUrl }));
 
         console.log(`✅ Article saved: ${headline} (https://worlddailyreport.com${shortUrl})`);
 
