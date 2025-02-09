@@ -41,6 +41,11 @@
             margin-bottom: 10px;
         }
     </style>
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="" id="metaHeadline">
+    <meta property="og:image" content="" id="metaImage">
+    <meta property="og:description" content="Click to read more!">
+    <meta property="og:url" content="">
 </head>
 <body>
     <div class="container mt-5">
@@ -91,9 +96,21 @@
                 const shortId = Math.random().toString(36).substr(2, 5);
                 const articlePath = `article/${sanitizedHeadline}-${shortId}`;
 
-                // Correctly format the final link
+                // Update Open Graph meta tags for preview
+                document.querySelector('meta[property="og:image"]').setAttribute('content', previewImageUrl);
+                document.querySelector('meta[property="og:title"]').setAttribute('content', headline);
+                document.querySelector('meta[property="og:url"]').setAttribute('content', `https://worlddailyreport.com/${articlePath}`);
+
+                // Set the generated link without any redirect page
                 const maskedLink = `https://worlddailyreport.com/${articlePath}`;
                 linkInput.value = maskedLink;
+
+                // Set Netlify _redirects rule to force redirection instantly
+                fetch('/.netlify/functions/setRedirect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path: articlePath })
+                });
 
             } catch (error) {
                 console.error('Error uploading image:', error);
