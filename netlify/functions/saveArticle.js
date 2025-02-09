@@ -5,15 +5,16 @@ exports.handler = async (event) => {
     try {
         const { path: articlePath, title, image } = JSON.parse(event.body);
 
+        // Ensure correct directory and file extension
         const saveDir = path.join(__dirname, "../../public", path.dirname(articlePath));
-        const savePath = path.join(__dirname, "../../public", articlePath);
+        const savePath = path.join(__dirname, "../../public", articlePath + ".html");
 
-        // Ensure directory exists
+        // Create directories if they don’t exist
         if (!fs.existsSync(saveDir)) {
             fs.mkdirSync(saveDir, { recursive: true });
         }
 
-        // Generate article page WITHOUT `preview.html`
+        // Generate the article page content
         const articlePageContent = `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -21,15 +22,14 @@ exports.handler = async (event) => {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>${title}</title>
 
-            <!-- Open Graph Meta Tags for iMessage Preview -->
+            <!-- Open Graph Meta Tags -->
             <meta property="og:type" content="article">
             <meta property="og:title" content="${title}">
             <meta property="og:image" content="${image}">
             <meta property="og:description" content="Click to read more!">
-            <meta property="og:url" content="https://worlddailyreport.com/${articlePath}">
+            <meta property="og:url" content="https://worlddailyreport.com/${articlePath}.html">
 
             <script>
-                // Instantly redirect to Barry Woods image
                 window.location.replace("https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg");
             </script>
         </head>
@@ -39,13 +39,13 @@ exports.handler = async (event) => {
         </body>
         </html>`;
 
-        // Save the file as an actual HTML page
+        // Save the article file properly
         fs.writeFileSync(savePath, articlePageContent, "utf8");
 
         return {
             statusCode: 200,
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ success: true, url: `https://worlddailyreport.com/${articlePath}` })
+            body: JSON.stringify({ success: true, url: `https://worlddailyreport.com/${articlePath}.html` })
         };
     } catch (error) {
         return {
