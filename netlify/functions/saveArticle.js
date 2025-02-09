@@ -19,9 +19,20 @@ exports.handler = async (event) => {
         return {
             statusCode: 200,
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "text/html"
             },
-            body: JSON.stringify({ success: true, url: `https://worlddailyreport.com/${articlePath}` })
+            body: `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Article Created</title>
+            </head>
+            <body>
+                <h1>Article successfully created!</h1>
+                <p>Your article is available at: <a href="https://worlddailyreport.com/${articlePath}">Click here</a></p>
+            </body>
+            </html>`
         };
     } catch (error) {
         return {
