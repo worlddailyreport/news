@@ -1,19 +1,19 @@
-const { getArticles, saveArticle } = require("./storage");
+import { get } from "@netlify/functions/storage";
 
-
-module.exports.handler = async (event) => {
+export const handler = async (event) => {
     try {
         const slug = event.path.split("/").pop();
+        const storageKey = `article_${slug}`;
 
-        // ✅ Retrieve articles from shared storage
-        let articles = getArticles();
+        // ✅ Retrieve article from Netlify KV Storage
+        const articleData = await get(storageKey);
 
-        if (!articles[slug]) {
+        if (!articleData) {
             console.error(`❌ No article found for slug: ${slug}`);
             return { statusCode: 404, body: "Error: Article not found." };
         }
 
-        const { headline, imageUrl } = articles[slug];
+        const { headline, imageUrl } = JSON.parse(articleData);
 
         console.log(`✅ Showing article: ${headline}`);
 
