@@ -61,8 +61,35 @@
 
     <script>
         function generateLink() {
-            const title = document.getElementById('fake_title').value;
-            const imageUrl = document.getElementById('fake_image_url').value;
-            const linkInput = document.getElementById('generatedLink');
+    const title = document.getElementById('fake_title').value;
+    const imageUrl = document.getElementById('fake_image_url').value;
+    const linkInput = document.getElementById('generatedLink');
 
-    
+    if (!title || !imageUrl) {
+        alert('Please enter a headline and an image URL.');
+        return;
+    }
+
+    const sanitizedTitle = title.replace(/\s+/g, '-').toLowerCase();
+    const shortId = Math.random().toString(36).substr(2, 5);
+    const articlePath = `article/${sanitizedTitle}-${shortId}.html`;
+    const generatedLink = `https://worlddailyreport.com/${articlePath}`;
+
+    linkInput.value = generatedLink;
+
+    // Send metadata to Netlify function to save as a file
+    fetch('/.netlify/functions/saveArticle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            path: articlePath,
+            title: title,
+            image: imageUrl
+        })
+    }).then(response => response.json())
+    .then(data => {
+        console.log("Article created:", data);
+    }).catch(error => {
+        console.error("Error saving article:", error);
+    });
+}
