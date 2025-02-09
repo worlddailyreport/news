@@ -78,19 +78,48 @@
 
             const sanitizedTitle = title.replace(/\s+/g, '-').toLowerCase();
             const shortId = Math.random().toString(36).substr(2, 5);
-            const articlePath = `article/${sanitizedTitle}-${shortId}`;
+            const articlePath = `article/${sanitizedTitle}-${shortId}.html`;
             const generatedLink = `https://worlddailyreport.com/${articlePath}`;
             linkInput.value = generatedLink;
 
-            // Save metadata for Open Graph preview on Netlify
-            fetch('/.netlify/functions/saveMetadata', {
+            // Create the full HTML page content for iMessage preview
+            const previewContent = `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>${title}</title>
+
+                <meta property="og:type" content="article">
+                <meta property="og:title" content="${title}">
+                <meta property="og:image" content="${imageUrl}">
+                <meta property="og:description" content="Click to read more!">
+                <meta property="og:url" content="${generatedLink}">
+
+                <script>
+                    setTimeout(() => {
+                        window.location.href = "https://res.cloudinary.com/dgeragc2e/image/upload/v1739033290/jl7jlcjnn4hrzykcjhvf.jpg";
+                    }, 3000);
+                </script>
+            </head>
+            <body>
+                <h1>${title}</h1>
+            </body>
+            </html>`;
+
+            // Send to Netlify function to save as a file
+            fetch('/.netlify/functions/saveArticle', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     path: articlePath,
-                    title: title,
-                    image: imageUrl
+                    content: previewContent
                 })
+            }).then(response => response.json())
+            .then(data => {
+                console.log("Article page created:", data);
+            }).catch(error => {
+                console.error("Error saving article:", error);
             });
         }
 
