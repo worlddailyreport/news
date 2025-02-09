@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>World Daily Report</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+    
+    <!-- Open Graph Meta Tags for iMessage Preview -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Breaking News" id="ogTitle">
+    <meta property="og:image" content="" id="ogImage">
+    <meta property="og:description" content="Click to read more!">
+    <meta property="og:url" content="">
 </head>
 <body>
     <div class="container mt-5">
@@ -47,11 +54,10 @@
             const generatedLink = `https://worlddailyreport.com/${articlePath}`;
             linkInput.value = generatedLink;
 
-            // Store the metadata for iMessage preview
-            localStorage.setItem(generatedLink, JSON.stringify({
-                title: title,
-                image: imageUrl
-            }));
+            // Update Open Graph meta tags dynamically
+            document.getElementById("ogTitle").setAttribute("content", title);
+            document.getElementById("ogImage").setAttribute("content", imageUrl);
+            document.querySelector("meta[property='og:url']").setAttribute("content", generatedLink);
         }
 
         function copyLink() {
