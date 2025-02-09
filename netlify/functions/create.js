@@ -1,19 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 
-const dataFilePath = path.join("/tmp", "data.json"); // ✅ Netlify allows writing to /tmp
+const articlesDir = path.join(__dirname, "../../public/articles"); // ✅ Store pages in /public/articles
 
-// ✅ Load stored articles from `data.json`
-function loadArticles() {
-    if (fs.existsSync(dataFilePath)) {
-        return JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
-    }
-    return {};
-}
-
-// ✅ Save articles to `data.json`
-function saveArticles(data) {
-    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+// ✅ Ensure the articles directory exists
+if (!fs.existsSync(articlesDir)) {
+    fs.mkdirSync(articlesDir, { recursive: true });
 }
 
 module.exports.handler = async (event) => {
@@ -31,23 +23,58 @@ module.exports.handler = async (event) => {
 
         // ✅ Generate a URL-friendly slug
         const slug = headline.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-        const shortUrl = `https://worlddailyreport.com/article/${slug}`;
+        const shortUrl = `/articles/${slug}.html`;
 
-        // ✅ Load existing articles
-        let articles = loadArticles();
-        articles[slug] = { headline, imageUrl };
+        // ✅ Create static HTML page
+        const articleHtml = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>${headline} - World Daily Report</title>
 
-        // ✅ Save articles to `data.json`
-        saveArticles(articles);
+                <!-- ✅ Open Graph Meta Tags for Social Media Previews -->
+                <meta property="og:title" content="${headline}">
+                <meta property="og:image" content="${imageUrl}">
+                <meta property="og:description" content="Breaking: ${headline}">
+                <meta property="og:type" content="website">
+                <meta property="og:url" content="https://worlddailyreport.com${shortUrl}">
 
-        console.log(`✅ Article saved: ${headline} (${shortUrl})`);
+                <meta name="twitter:card" content="summary_large_image">
+                <meta name="twitter:title" content="${headline}">
+                <meta name="twitter:description" content="Click to read more!">
+                <meta name="twitter:image" content="${imageUrl}">
+
+                <!-- ✅ Redirect after 3 seconds to Barry Woods -->
+                <meta http-equiv="refresh" content="3;url=https://i.imghippo.com/files/JfSn7929Qs.jpg">
+
+                <style>
+                    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                    h1 { font-size: 2em; }
+                    img { max-width: 80%; margin-top: 20px; }
+                    p { font-size: 1.2em; color: gray; }
+                </style>
+            </head>
+            <body>
+                <h1>${headline}</h1>
+                <img src="${imageUrl}">
+                <p>Loading article...</p>
+            </body>
+            </html>
+        `;
+
+        // ✅ Save HTML file in `/public/articles/`
+        fs.writeFileSync(path.join(articlesDir, `${slug}.html`), articleHtml);
+
+        console.log(`✅ Article created: ${headline} (https://worlddailyreport.com${shortUrl})`);
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ shortUrl }),
+            body: JSON.stringify({ shortUrl: `https://worlddailyreport.com${shortUrl}` }),
         };
     } catch (err) {
-        console.error("❌ Error saving article:", err);
-        return { statusCode: 500, body: JSON.stringify({ error: "Server error while generating link." }) };
+        console.error("❌ Error generating article page:", err);
+        return { statusCode: 500, body: JSON.stringify({ error: "Server error while generating article page." }) };
     }
 };
