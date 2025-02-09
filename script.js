@@ -7,7 +7,7 @@ async function generateFakeNews() {
         return;
     }
 
-    const response = await fetch("/create", {
+    const response = await fetch("/.netlify/functions/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ headline, imageUrl }),
@@ -15,7 +15,10 @@ async function generateFakeNews() {
 
     const data = await response.json();
     if (data.shortUrl) {
-        document.getElementById("result").innerHTML = `Troll your friends: <a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>`;
+        const newsList = document.getElementById("news-list");
+        const newItem = document.createElement("li");
+        newItem.innerHTML = `<a href="${data.shortUrl}" target="_blank">${headline}</a>`;
+        newsList.prepend(newItem);
     } else {
         alert("Error generating link");
     }
