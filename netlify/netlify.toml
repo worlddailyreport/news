@@ -1,6 +1,6 @@
 [build]
-  publish = "."
-  
+  publish = "public"
+
 [[redirects]]
   from = "/article/:slug"
   to = "/article.html"
