@@ -21,7 +21,7 @@
     <p id="generatedLink"></p>
 
     <script>
-        
+
     function generateTrollLink() {
         const headlineInput = document.getElementById("headline").value;
         const imageUrlInput = document.getElementById("imageUrl").value;
@@ -31,14 +31,23 @@
             return;
         }
 
-        // ✅ Generate the final article link with metadata parameters
-        const encodedTitle = encodeURIComponent(headlineInput);
-        const encodedImage = encodeURIComponent(imageUrlInput);
-        const shortUrl = `https://worlddailyreport.com/article/trolled?title=${encodedTitle}&img=${encodedImage}`;
+        // ✅ Generate a URL-friendly slug based on the headline
+        const slug = headlineInput.toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "");
 
-        // ✅ Display the generated link
+        // ✅ Store the metadata in localStorage so it can be retrieved in `article.html`
+        const articles = JSON.parse(localStorage.getItem("articles")) || {};
+        articles[slug] = { headline: headlineInput, imageUrl: imageUrlInput };
+        localStorage.setItem("articles", JSON.stringify(articles));
+
+        // ✅ Generate the short link
+        const shortUrl = `https://worlddailyreport.com/article/${slug}`;
+
+        // ✅ Display the shortened link
         document.getElementById("generatedLink").innerHTML = `<a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
     }
+
 
     </script>
 
