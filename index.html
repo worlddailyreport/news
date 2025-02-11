@@ -3,53 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Daily Report - Troll News</title>
-    <link rel="stylesheet" href="/styles.css">  <!-- ✅ Correctly linked CSS -->
+    <title>World Daily Report</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <header>
+        <h1>World Daily Report</h1>
+    </header>
 
-    <h1>World Daily Report - Create a Troll News Article</h1>
-    
-    <label for="headline">Headline:</label>
-    <input type="text" id="headline" placeholder="Enter a troll headline"><br>
+    <main>
+        <section class="news-form">
+            <h2>Create Your Own News Headline</h2>
+            <input type="text" id="headline" placeholder="Enter a troll headline">
+            <input type="text" id="imageUrl" placeholder="Enter an image URL">
+            <button onclick="generateFakeNews()">Generate Fake Link</button>
+        </section>
 
-    <label for="imageUrl">Image URL:</label>
-    <input type="text" id="imageUrl" placeholder="Enter an image URL"><br>
+        <section id="generated-links">
+            <h2>Recent Fake News</h2>
+            <ul id="news-list"></ul>
+        </section>
+    </main>
 
-    <button onclick="generateTrollLink()">Generate Link</button>
-
-    <p id="generatedLink"></p>
-
-    <script>
-
-    function generateTrollLink() {
-        const headlineInput = document.getElementById("headline").value;
-        const imageUrlInput = document.getElementById("imageUrl").value;
-
-        if (!headlineInput || !imageUrlInput) {
-            alert("Please enter both a headline and an image URL.");
-            return;
-        }
-
-        // ✅ Generate a URL-friendly slug based on the headline
-        const slug = headlineInput.toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/(^-|-$)/g, "");
-
-        // ✅ Store the metadata in localStorage so it can be retrieved in `article.html`
-        const articles = JSON.parse(localStorage.getItem("articles")) || {};
-        articles[slug] = { headline: headlineInput, imageUrl: imageUrlInput };
-        localStorage.setItem("articles", JSON.stringify(articles));
-
-        // ✅ Generate the short link
-        const shortUrl = `https://worlddailyreport.com/article/${slug}`;
-
-        // ✅ Display the shortened link
-        document.getElementById("generatedLink").innerHTML = `<a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
-    }
-
-
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
