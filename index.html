@@ -3,28 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="World Daily Report">
+    <meta property="og:description" content="Breaking News!">
+    <meta property="og:image" content="https://worlddailyreport.com/default-image.jpg">
+    <meta property="og:url" content="https://worlddailyreport.com/articles/example">
     <title>World Daily Report</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        form {
+            margin: 20px auto;
+            max-width: 400px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        #generatedLink {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #article {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>World Daily Report</h1>
-    </header>
+    <h1>World Daily Report</h1>
+    <form id="trollForm">
+        <input type="text" id="headline" placeholder="Enter a troll headline" required>
+        <input type="url" id="imageUrl" placeholder="Enter an image URL" required>
+        <button type="submit">Generate Link</button>
+    </form>
+    <p id="generatedLink"></p>
 
-    <main>
-        <section class="news-form">
-            <h2>Create Your Own News Headline</h2>
-            <input type="text" id="headline" placeholder="Enter a troll headline">
-            <input type="text" id="imageUrl" placeholder="Enter an image URL">
-            <button onclick="generateFakeNews()">Generate Fake Link</button>
-        </section>
+    <div id="article">
+        <h1 id="articleHeadline"></h1>
+        <img id="articleImage" src="" alt="Troll Image" style="max-width: 100%;">
+    </div>
 
-        <section id="generated-links">
-            <h2>Recent Fake News</h2>
-            <ul id="news-list"></ul>
-        </section>
-    </main>
+    <script>
+        // Handle form submission
+        document.getElementById('trollForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const headline = document.getElementById('headline').value;
+            const imageUrl = document.getElementById('imageUrl').value;
 
-    <script src="script.js"></script>
-</body>
-</html>
+            // Generate a unique ID
+            const uniqueId = Math.random().toString(36).substring(7);
+
+            // Save the data to localStorage
+            localStorage.setItem(uniqueId, JSON.stringify({ headline, imageUrl }));
+
+            // Generate the URL
+            const
