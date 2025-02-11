@@ -1,9 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const dataFilePath = path.join(__dirname, "data.json");
+const dataFilePath = path.join("/tmp", "data.json");  // ✅ Store in /tmp/
 
-// ✅ Ensure `data.json` exists before writing
+// ✅ Ensure data.json exists before writing
 function ensureDataFileExists() {
     if (!fs.existsSync(dataFilePath)) {
         fs.writeFileSync(dataFilePath, JSON.stringify({}), "utf8");
@@ -41,7 +41,7 @@ module.exports.handler = async (event) => {
         let articles = loadArticles();
         articles[slug] = { headline, imageUrl };
 
-        // ✅ Save back to `data.json`
+        // ✅ Save back to `data.json` in /tmp/
         saveArticles(articles);
 
         console.log(`✅ Article saved: ${headline} (https://worlddailyreport.com${shortUrl})`);
