@@ -17,7 +17,7 @@ async function generateFakeNews() {
     if (data.shortUrl) {
         const newsList = document.getElementById("news-list");
         const newItem = document.createElement("li");
-        newItem.innerHTML = `<a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>`;
+        newItem.innerHTML = `<a href="${data.shortUrl}" target="_blank">${headline}</a>`;
         newsList.prepend(newItem);
     } else {
         alert("Error generating link");
