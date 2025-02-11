@@ -1,19 +1,24 @@
 const fs = require("fs");
 const path = require("path");
 
-const dataFilePath = path.join(__dirname, "data.json");  // Store articles persistently
+const dataFilePath = path.join(__dirname, "data.json");
+
+// ✅ Ensure `data.json` exists before writing
+function ensureDataFileExists() {
+    if (!fs.existsSync(dataFilePath)) {
+        fs.writeFileSync(dataFilePath, JSON.stringify({}), "utf8");
+    }
+}
 
 // ✅ Load stored articles
 function loadArticles() {
-    if (fs.existsSync(dataFilePath)) {
-        return JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
-    }
-    return {};
+    ensureDataFileExists();
+    return JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
 }
 
 // ✅ Save articles
 function saveArticles(data) {
-    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), "utf8");
 }
 
 module.exports.handler = async (event) => {
