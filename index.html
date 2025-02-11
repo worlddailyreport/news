@@ -21,23 +21,26 @@
     <p id="generatedLink"></p>
 
     <script>
-        function generateTrollLink() {
-            const headlineInput = document.getElementById("headline").value;
-            const imageUrlInput = document.getElementById("imageUrl").value;
+        f<script>
+    function generateTrollLink() {
+        const headlineInput = document.getElementById("headline").value;
+        const imageUrlInput = document.getElementById("imageUrl").value;
 
-            if (!headlineInput || !imageUrlInput) {
-                alert("Please enter both a headline and an image URL.");
-                return;
-            }
-
-            const slug = headlineInput.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-            const articles = JSON.parse(localStorage.getItem("articles")) || {};
-            articles[slug] = { headline: headlineInput, imageUrl: imageUrlInput };
-            localStorage.setItem("articles", JSON.stringify(articles));
-
-            const shortUrl = `https://worlddailyreport.com/article/${slug}`;
-            document.getElementById("generatedLink").innerHTML = `<a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+        if (!headlineInput || !imageUrlInput) {
+            alert("Please enter both a headline and an image URL.");
+            return;
         }
+
+        // ✅ Generate the final article link with metadata parameters
+        const encodedTitle = encodeURIComponent(headlineInput);
+        const encodedImage = encodeURIComponent(imageUrlInput);
+        const shortUrl = `https://worlddailyreport.com/article/trolled?title=${encodedTitle}&img=${encodedImage}`;
+
+        // ✅ Display the generated link
+        document.getElementById("generatedLink").innerHTML = `<a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+    }
+</script>
+
     </script>
 
 </body>
