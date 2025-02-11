@@ -1,9 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const dataFilePath = path.join("/tmp", "data.json");
+const dataFilePath = path.join(__dirname, "data.json");
 
-// ✅ Load stored articles from `/tmp/data.json`
+// ✅ Load stored articles
 function loadArticles() {
     if (fs.existsSync(dataFilePath)) {
         return JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
