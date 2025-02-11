@@ -4,26 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>World Daily Report - Troll News</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            padding: 20px;
-        }
-        h1 {
-            color: #333;
-        }
-        input, button {
-            margin: 10px;
-            padding: 10px;
-            font-size: 16px;
-        }
-        #generatedLink {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-    </style>
+    <link rel="stylesheet" href="/styles.css">  <!-- ✅ Correctly linked CSS -->
 </head>
 <body>
 
@@ -49,15 +30,11 @@
                 return;
             }
 
-            // ✅ Generate a URL-friendly slug
             const slug = headlineInput.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-
-            // ✅ Save the article to localStorage
             const articles = JSON.parse(localStorage.getItem("articles")) || {};
             articles[slug] = { headline: headlineInput, imageUrl: imageUrlInput };
             localStorage.setItem("articles", JSON.stringify(articles));
 
-            // ✅ Display the generated link
             const shortUrl = `https://worlddailyreport.com/article/${slug}`;
             document.getElementById("generatedLink").innerHTML = `<a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
         }
